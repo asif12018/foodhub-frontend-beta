@@ -23,6 +23,8 @@ import { useEffect, useState } from "react";
 import { orderService } from "@/services/order.service";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
+import { authClient } from "@/src/app/lib/auth-client";
+import { getSession } from "@/server action/auth.action";
 type StockStatusCode = "IN_STOCK" | "OUT_OF_STOCK";
 
 interface StockInfo {
@@ -177,6 +179,18 @@ interface ProductDetail1Props {
 }
 
 const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
+  const [sessionData, setSessionData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const { data, error } = await getSession();
+      setSessionData(data);
+    };
+    fetchSession();
+  }, []);
+
+  console.log("this is session data", sessionData?.user?.roles);
+
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
   const handleQuantity = (type: "increment" | "decrement") => {
@@ -198,17 +212,17 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
   //create order
 
   const handleCreateOrder = async () => {
-    const {data, error} = await orderService.createOrder(food.id, quantity);
-    if(data?.success){
+    const { data, error } = await orderService.createOrder(food.id, quantity);
+    if (data?.success) {
       toast.success(data.message);
-      redirect("/")
+      redirect("/");
     }
     console.log(error);
-    if(error){
+    if (error) {
       toast.error(error);
     }
   };
-  
+
   return (
     <section className={cn("py-32", className)}>
       <div className="container">
@@ -276,7 +290,11 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
               </div>
             </div>
 
-            <Button onClick={()=>handleCreateOrder()} size="lg" className="w-full">
+            <Button disabled={sessionData?.user?.roles !== "Customer"}
+              onClick={() => handleCreateOrder()}
+              size="lg"
+              className="w-full"
+            >
               Buy Now
             </Button>
 
