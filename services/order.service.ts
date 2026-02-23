@@ -21,4 +21,14 @@ export const orderService = {
       return { data: null, error: err.message };
     }
   },
+  getCart: async(id: string)=>{
+    try{
+      const res = await fetch(`${API_URL}/api/order/cart`);
+      const data = await res.json();
+      return {data:data, error:null}
+
+    }catch(err:any){
+      return {data:null, error:err.message}
+    }
+  }
 };

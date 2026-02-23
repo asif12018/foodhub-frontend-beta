@@ -33,6 +33,7 @@ import { useRouter } from "next/navigation";
 import { getSession } from "@/server action/auth.action";
 import { env } from "process";
 import { authClient } from "@/src/app/lib/auth-client";
+import ProfileIcon from "./profileDropDown";
 
 interface Navbar5Props {
   className?: string;
@@ -45,7 +46,11 @@ const Navbar = ({ className }: Navbar5Props) => {
   const [isPending, setIsPending] = useState(false);
 
   // Use better-auth's reactive hook! It automatically updates across tabs and after login.
-  const { data: sessionData, isPending: loading, refetch } = authClient.useSession();
+  const {
+    data: sessionData,
+    isPending: loading,
+    refetch,
+  } = authClient.useSession();
   const session = sessionData?.session;
 
   // console.log("this is session", session)
@@ -55,16 +60,18 @@ const Navbar = ({ className }: Navbar5Props) => {
     const toastId = toast("Signing out....");
     try {
       await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          toast.success("Signed out successfully", { id: toastId });
-          router.push("/");
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success("Signed out successfully", { id: toastId });
+            router.push("/");
+          },
+          onError: (ctx) => {
+            toast.error(ctx.error.message || "Something went wrong", {
+              id: toastId,
+            });
+          },
         },
-        onError: (ctx) => {
-          toast.error(ctx.error.message || "Something went wrong", { id: toastId });
-        }
-      }
-    });
+      });
     } catch (err) {
       toast.error("Something went wrong", { id: toastId });
     } finally {
@@ -127,13 +134,14 @@ const Navbar = ({ className }: Navbar5Props) => {
 
             {loading ? null : session ? (
               // USER LOGGED IN
-              <Button
-                onClick={handleLogout}
-                disabled={isPending}
-                variant="outline"
-              >
-                {isPending ? "Signing out..." : "Sign out"}
-              </Button>
+              // <Button
+              //   onClick={handleLogout}
+              //   disabled={isPending}
+              //   variant="outline"
+              // >
+              //   {isPending ? "Signing out..." : "Sign out"}
+              // </Button>
+              <ProfileIcon onLogout={handleLogout} isLoggingOut={isPending} />
             ) : (
               // USER NOT LOGGED IN
               <Button asChild variant="outline">
