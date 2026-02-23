@@ -9,6 +9,8 @@ interface foodSingleData {
     name: string;
     description: string;
     cusine: string;
+    dietary_tags: string[];
+    prepTimeMinutes: number;
     price: number;
     discountPrice?: number;
     imageUrl: string | null;

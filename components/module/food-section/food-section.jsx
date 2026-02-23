@@ -16,6 +16,8 @@ export default async function FoodSection() {
 
 
 
+
+
   return (
     <div>
       <div className="flex justify-center items-center flex-col gap-2">
@@ -30,6 +32,7 @@ export default async function FoodSection() {
             key={food.id}
             product={{
               name: food.name,
+              id: food.id,
               description: food.description,
               price: {
                 regular: food.price,
@@ -42,7 +45,7 @@ export default async function FoodSection() {
               cuisine: food.cuisine,
               dietary_tags: food.dietary_tags,
               preparation_time: food.prepTimeMinutes,
-              link: `/food/${food.id}`,
+              link: `/allFood/${food.id}`,
             }}
             className="w-full"
           />

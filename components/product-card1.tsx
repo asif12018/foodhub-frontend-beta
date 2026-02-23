@@ -46,7 +46,7 @@ interface ProductCard1Props {
 
 const ProductCard1 = ({ className, product }: ProductCard1Props) => {
   const { regular, sale, currency } = product.price;
-  // console.log(product)
+  console.log(product)
   return (
     <div
       className={cn(

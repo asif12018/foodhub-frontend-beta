@@ -19,6 +19,7 @@ import {
 import { Field, FieldLabel } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import foodSingleData from "@/src/constants/food.types";
+import { useEffect, useState } from "react";
 type StockStatusCode = "IN_STOCK" | "OUT_OF_STOCK";
 
 interface StockInfo {
@@ -173,7 +174,25 @@ interface ProductDetail1Props {
 }
 
 const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
-  console.log(food, "this is food");
+  const [quantity, setQuantity] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const handleQuantity = (type: "increment" | "decrement") => {
+    if (type === "increment") {
+      setQuantity(quantity + 1);
+    } else {
+      setQuantity(quantity - 1);
+    }
+  };
+  // check total price
+  useEffect(() => {
+    if (food.discountPrice) {
+      setTotalPrice(quantity * food.discountPrice);
+    } else {
+      setTotalPrice(quantity * food.price);
+    }
+  }, [quantity]);
+  
+  //create order
   return (
     <section className={cn("py-32", className)}>
       <div className="container">
@@ -216,49 +235,45 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
                   currency="BDT"
                 />
               </div>
-
+              <p></p>
+              <p>
+                <span className="font-bold">Dietary Tags: </span>
+                {food.dietary_tags.map((tag) => (
+                  <Badge key={tag}>{tag}</Badge>
+                ))}
+              </p>
               <p className="text-muted-foreground">{food.description}</p>
+              <p>Preparation time: {food.prepTimeMinutes} minutes</p>
+            </div>
+
+            <div className="container mx-auto">
+              <p className="text-center font-bold my-1">Quantity</p>
+              <div className="flex items-center justify-center gap-2">
+                <Button
+                  disabled={quantity === 1}
+                  onClick={() => handleQuantity("decrement")}
+                >
+                  -
+                </Button>
+                {quantity}
+                <Button onClick={() => handleQuantity("increment")}>+</Button>
+              </div>
             </div>
 
             <Button size="lg" className="w-full">
               Buy Now
             </Button>
 
-            {/* <ProductForm
-              hinges={PRODUCT_DETAILS.hinges}
-              selected={{
-                size: PRODUCT_DETAILS.size,
-                color: PRODUCT_DETAILS.color,
-                quantity: 1,
-              }}
-            /> */}
-
             <ProductInfo
               info={[
                 {
-                  label: "Material",
-                  value: "100% Premium Denim",
+                  label: "Payment Method",
+                  value: "Cash on delivery",
                 },
                 {
-                  label: "Style",
-                  value: "Puffer Jacket",
-                },
-                {
-                  label: "Season",
-                  value: "All Season",
-                },
-                {
-                  label: "Care",
-                  value: "Machine Washable",
-                },
-                {
-                  label: "Origin",
-                  value: "Made in Italy",
-                },
-                {
-                  label: "Fit",
-                  value: "Regular Fit",
-                },
+                  label: "total Price",
+                  value: totalPrice.toString(),
+                }
               ]}
             />
           </div>
@@ -273,7 +288,7 @@ const ProductInfo = ({ info }: ProductInfoProps) => {
 
   return (
     <div>
-      <h2 className="mb-4 text-lg font-semibold">Product Details</h2>
+      <h2 className="mb-4 text-lg font-semibold">Food Details</h2>
       <dl>
         {info.map((item, index) => (
           <div
