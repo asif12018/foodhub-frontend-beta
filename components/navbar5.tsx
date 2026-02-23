@@ -48,26 +48,23 @@ const Navbar = ({ className }: Navbar5Props) => {
   const { data: sessionData, isPending: loading, refetch } = authClient.useSession();
   const session = sessionData?.session;
 
+  // console.log("this is session", session)
+
   const handleLogout = async () => {
     setIsPending(true);
     const toastId = toast("Signing out....");
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/sign-out`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
+      await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          toast.success("Signed out successfully", { id: toastId });
+          router.push("/");
         },
-      );
-      const data = await res.json();
-      setResponse(data);
-      toast.success("User Signout successfully", { id: toastId });
-      router.push("/");
-      router.refresh();
-      refetch();
+        onError: (ctx) => {
+          toast.error(ctx.error.message || "Something went wrong", { id: toastId });
+        }
+      }
+    });
     } catch (err) {
       toast.error("Something went wrong", { id: toastId });
     } finally {

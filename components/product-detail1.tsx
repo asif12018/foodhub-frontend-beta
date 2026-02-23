@@ -20,6 +20,9 @@ import { Field, FieldLabel } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import foodSingleData from "@/src/constants/food.types";
 import { useEffect, useState } from "react";
+import { orderService } from "@/services/order.service";
+import { toast } from "sonner";
+import { redirect } from "next/navigation";
 type StockStatusCode = "IN_STOCK" | "OUT_OF_STOCK";
 
 interface StockInfo {
@@ -191,8 +194,21 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
       setTotalPrice(quantity * food.price);
     }
   }, [quantity]);
-  
+
   //create order
+
+  const handleCreateOrder = async () => {
+    const {data, error} = await orderService.createOrder(food.id, quantity);
+    if(data?.success){
+      toast.success(data.message);
+      redirect("/")
+    }
+    console.log(error);
+    if(error){
+      toast.error(error);
+    }
+  };
+  
   return (
     <section className={cn("py-32", className)}>
       <div className="container">
@@ -260,7 +276,7 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
               </div>
             </div>
 
-            <Button size="lg" className="w-full">
+            <Button onClick={()=>handleCreateOrder()} size="lg" className="w-full">
               Buy Now
             </Button>
 
@@ -273,7 +289,7 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
                 {
                   label: "total Price",
                   value: totalPrice.toString(),
-                }
+                },
               ]}
             />
           </div>
