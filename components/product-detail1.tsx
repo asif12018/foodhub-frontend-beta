@@ -295,7 +295,7 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
               size="lg"
               className="w-full"
             >
-              Buy Now
+              Add to Cart
             </Button>
 
             <ProductInfo
