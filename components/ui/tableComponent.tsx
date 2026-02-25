@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/table";
 import { getMyCart } from "@/server action/cart.action";
 import { cartService } from "@/services/cart.service";
+import Link from "next/link";
+import { Button } from "./button";
 
 const invoices = [
   {
@@ -71,35 +73,35 @@ export function TableComponent() {
     fetchCart();
   }, []);
 
-  console.log("this is cart data", cartData);
+  console.log("this is cart data", cartData?.data);
   return (
     <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Invoice</TableHead>
+          <TableHead className="w-[100px]">Name</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Action</TableHead>
-          <TableHead>Quantity</TableHead>
+          <TableHead className="text-center">Quantity</TableHead>
           <TableHead className="text-right">Amount</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">{invoice.invoice}</TableCell>
-            <TableCell>{invoice.paymentStatus}</TableCell>
-            <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+        {cartData?.data?.map((invoice: any) => (
+          <TableRow key={invoice.id}>
+            <TableCell className="font-medium">{invoice.id}</TableCell>
+            <TableCell className="font-medium">{invoice.mealName}</TableCell>
+            <TableCell>{invoice.status}</TableCell>
+            <TableCell>
+                <Button><Link href={`/cart/checkout/${invoice.id}`}>CheckOut</Link></Button>
+            </TableCell>
+            <TableCell className="text-center">{invoice.quantity}</TableCell>
+            <TableCell className="text-right">{invoice.price}tk</TableCell>
           </TableRow>
         ))}
       </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
-        </TableRow>
-      </TableFooter>
+     
     </Table>
   );
 }
