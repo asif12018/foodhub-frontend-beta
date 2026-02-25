@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function CommonLayout({children}: {children:React.ReactNode}) {
   return (
-    <div>
+    <div className='container mx-auto'>
       <Navbar className='flex items-center justify-center'></Navbar>
       {children}
     </div>

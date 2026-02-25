@@ -42,8 +42,24 @@ interface Navbar5Props {
 const Navbar = ({ className }: Navbar5Props) => {
   const router = useRouter();
 
-  const [response, setResponse] = useState<any>(null);
+  const [sessionDatas, setSessionDatas] = useState<any>(null);
+
+
+
+  
   const [isPending, setIsPending] = useState(false);
+
+    useEffect(() => {
+    const fetchSession = async () => {
+      const { data, error } = await getSession();
+      setSessionDatas(data);
+    };
+    fetchSession();
+  }, [isPending]);
+
+  console.log("this is session data", sessionDatas?.user?.roles);
+
+
 
   // Use better-auth's reactive hook! It automatically updates across tabs and after login.
   const {
@@ -126,6 +142,18 @@ const Navbar = ({ className }: Navbar5Props) => {
                   <Link href="/allFood"> Menu</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
+
+               <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="#"
+                  className={navigationMenuTriggerStyle()}
+                  asChild
+                >
+                  {
+                    sessionDatas?.user?.roles === "Customer" && <Link href="/cart"> Cart</Link>
+                  }
+                </NavigationMenuLink>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
           <div className="hidden items-center gap-4 lg:flex">
@@ -187,19 +215,25 @@ const Navbar = ({ className }: Navbar5Props) => {
                   <Link href="/allFood" className="font-medium">
                     Menu
                   </Link>
+                  {
+                    sessionDatas?.user?.roles === "Customer" && (
+                      <Link href="/cart" className="font-medium">Cart</Link>
+                    )
+                  }
                   <a href="#" className="font-medium">
                     Pricing
                   </a>
                 </div>
                 <div className="mt-6 flex flex-col gap-4">
                   {loading ? null : session ? (
-                    <Button
-                      onClick={handleLogout}
-                      disabled={isPending}
-                      variant="outline"
-                    >
-                      {isPending ? "Signing out..." : "Sign out"}
-                    </Button>
+                    // <Button
+                    //   onClick={handleLogout}
+                    //   disabled={isPending}
+                    //   variant="outline"
+                    // >
+                    //   {isPending ? "Signing out..." : "Sign out"}
+                    // </Button>
+                    <ProfileIcon onLogout={handleLogout} isLoggingOut={isPending} />
                   ) : (
                     <Link
                       href="/signin"
