@@ -73,7 +73,7 @@ export function TableComponent() {
     fetchCart();
   }, []);
 
-  console.log("this is cart data", cartData?.data);
+  // console.log("this is cart data", cartData?.data);
   return (
     <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>
@@ -94,7 +94,14 @@ export function TableComponent() {
             <TableCell className="font-medium">{invoice.mealName}</TableCell>
             <TableCell>{invoice.status}</TableCell>
             <TableCell>
-                <Button><Link href={`/cart/checkout/${invoice.id}`}>CheckOut</Link></Button>
+                {/* <Button><Link href={`/cart/checkout/${invoice.id}`}>CheckOut</Link></Button> */}
+                {
+                  invoice.deliveryAddress ? (
+                    <Button disabled>CheckOut Completed</Button>
+                  ) : (
+                    <Button><Link href={`/cart/checkout/${invoice.id}`}>CheckOut</Link></Button>
+                  )
+                }
             </TableCell>
             <TableCell className="text-center">{invoice.quantity}</TableCell>
             <TableCell className="text-right">{invoice.price}tk</TableCell>
