@@ -1,8 +1,11 @@
+import { TableComponent } from "@/components/ui/tableComponent"
 
 
 function CartPage() {
   return (
-    <div>CartPage</div>
+    <div>
+      <TableComponent/>
+    </div>
   )
 }
 

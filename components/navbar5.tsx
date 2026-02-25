@@ -57,7 +57,7 @@ const Navbar = ({ className }: Navbar5Props) => {
     fetchSession();
   }, [isPending]);
 
-  console.log("this is session data", sessionDatas?.user?.roles);
+  // console.log("this is session data", sessionDatas?.user?.roles);
 
 
 
