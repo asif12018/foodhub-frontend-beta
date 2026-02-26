@@ -5,7 +5,7 @@ import { reviewService } from "@/services/review.service";
 
 
 export const createReviewAction = async (rating: number, comment: string, mealId: string)=>{
-    const res = await reviewService.createReview(rating, comment, mealId);
+    const res = await reviewService.createReviewByMealId(mealId, rating, comment);
     return res;
 }
 

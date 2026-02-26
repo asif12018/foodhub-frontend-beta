@@ -3,21 +3,15 @@
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { usePathname } from 'next/navigation';
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import {
@@ -31,7 +25,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { getSession } from "@/server action/auth.action";
-import { env } from "process";
+
 import { authClient } from "@/src/app/lib/auth-client";
 import ProfileIcon from "./profileDropDown";
 
@@ -43,19 +37,24 @@ const Navbar = ({ className }: Navbar5Props) => {
   const router = useRouter();
 
   const [sessionDatas, setSessionDatas] = useState<any>(null);
+  const [error, setError] = useState<any>(null);
 
 
 
   
   const [isPending, setIsPending] = useState(false);
-
+    const pathname = usePathname()
     useEffect(() => {
     const fetchSession = async () => {
       const { data, error } = await getSession();
+      setError(error);
       setSessionDatas(data);
     };
+
     fetchSession();
-  }, [isPending]);
+  }, [isPending, pathname]);
+
+  // console.log("this is error from session", error)
 
   // console.log("this is session data", sessionDatas?.user?.roles);
 
@@ -68,6 +67,7 @@ const Navbar = ({ className }: Navbar5Props) => {
     refetch,
   } = authClient.useSession();
   const session = sessionData?.session;
+
 
   // console.log("this is session", session)
 

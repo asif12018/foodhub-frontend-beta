@@ -2,8 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleCheck, Star, StarHalf } from "lucide-react";
 import { Controller, ControllerRenderProps, useForm } from "react-hook-form";
-import z from "zod";
-
+import * as z from "zod";
 
 import { cn } from "@/lib/utils";
 
@@ -17,7 +16,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Field, FieldLabel } from "@/components/ui/field";
+import {
+  Field as UIField,
+  FieldLabel,
+  FieldGroup,
+  FieldError,
+} from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import foodSingleData from "@/src/constants/food.types";
 import { useEffect, useState } from "react";
@@ -28,6 +32,9 @@ import { authClient } from "@/src/app/lib/auth-client";
 import { getSession } from "@/server action/auth.action";
 import { ItemGroupExample } from "./module/getFoodById/review";
 import StarRating_Basic from "./commerce-ui/star-rating-basic";
+import { reviewService } from "@/services/review.service";
+import { Input } from "./ui/input";
+import { createReviewAction, getReviewByMealIdAction } from "@/server action/review.action";
 type StockStatusCode = "IN_STOCK" | "OUT_OF_STOCK";
 
 interface StockInfo {
@@ -184,6 +191,8 @@ interface ProductDetail1Props {
 const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
   const [sessionData, setSessionData] = useState<any>(null);
 
+  const [isReviewed, setIsReviewed] = useState(false);
+
   useEffect(() => {
     const fetchSession = async () => {
       const { data, error } = await getSession();
@@ -192,7 +201,7 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
     fetchSession();
   }, []);
 
-  console.log("this is session data", sessionData?.user?.roles);
+  // console.log("this is session data", sessionData?.user);
 
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -212,6 +221,22 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
     }
   }, [quantity]);
 
+  //get review by meal id
+
+  useEffect(()=>{
+    const fetchReview = async () => {
+      const { data, error } = await getReviewByMealIdAction(food.id);
+      // console.log("this is review data", data)
+      // console.log(error, "this is error")
+      if (data?.success) {
+        setIsReviewed(true);
+        // console.log(data, "this is review data")
+      }
+    };
+ 
+    fetchReview();
+  },[food.id, sessionData?.user])
+
   //create order
 
   const handleCreateOrder = async () => {
@@ -219,16 +244,56 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
     if (data?.success) {
       toast.success(data.message);
       redirect("/");
+    } else if (data && !data.success) {
+      toast.error(data.message || "Failed to add to cart");
     }
+
     console.log(error);
     if (error) {
-      toast.error(error);
+      toast.error(error.message || "An error occurred");
     }
   };
 
-  console.log("food details", food?.reviews);
+  // console.log("food details", food?.reviews);
 
   const [rating, setRating] = useState(3);
+  console.log("rating", rating);
+
+  //set review function start from here
+
+  const reviewSchema = z.object({
+    rating: z.number(),
+    comment: z.string(),
+  });
+
+  const form = useForm({
+    resolver: zodResolver(reviewSchema),
+    defaultValues: {
+      rating: rating,
+      comment: "",
+    },
+  });
+
+  const onSubmitReview = async (value: z.infer<typeof reviewSchema>) => {
+    console.log("review value", rating, value.comment, food.id);
+    const { data, error } = await createReviewAction(
+      rating,
+      value.comment,
+      food.id,
+    );
+    if (data?.success) {
+      toast.success(data?.message || "Review submitted successfully");
+      form.reset();
+      setRating(3);
+      redirect("/");
+    } else if (data && !data.success) {
+      toast.error(data?.message || "Failed to submit review");
+    }
+
+    if (error) {
+      toast.error(error.message || "An error occurred");
+    }
+  };
 
   return (
     <section className={cn("py-32", className)}>
@@ -320,12 +385,57 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
             />
             {/* add review  section start from here*/}
 
+
+            {
+              sessionData?.user?.roles === "Customer" && (
+              <>
+                 <form id="review-form" onSubmit={form.handleSubmit(onSubmitReview)}>
+              <FieldGroup>
+                <Controller
+                  control={form.control}
+                  name="comment"
+                  render={({ field, fieldState }) => {
+                    const isInvalid =
+                      fieldState.isTouched && fieldState.invalid;
+                    return (
+                      <UIField>
+                        <FieldLabel htmlFor={field.name}>Comment</FieldLabel>
+                        <Input type="text" id={field.name} {...field} />
+                        {isInvalid && fieldState.error && (
+                          <FieldError
+                            errors={[{ message: fieldState.error.message }]}
+                          />
+                        )}
+                      </UIField>
+                    );
+                  }}
+                />
+
+                <UIField>
+                  <Button form="review-form" type="submit">
+                    Submit Review
+                  </Button>
+                </UIField>
+              </FieldGroup>
+            </form>
+
+             <div className="flex flex-row items-center justify-center gap-4">
+              <StarRating_Basic
+                value={rating}
+                onChange={setRating}
+                maxStars={5}
+              />
+              <p>({rating})</p>
+            </div>
+            
+            </>
+            
+              )
+            }
+
             
 
-            <div className="flex flex-row items-center justify-center gap-4">
-      <StarRating_Basic value={rating} onChange={setRating} maxStars={5} />
-      <p>({rating})</p>
-    </div>
+           
 
             <div>
               {food?.reviews?.map((review) => (
@@ -479,12 +589,12 @@ const ProductForm = ({ hinges, selected }: ProductFormProps) => {
           control={form.control}
           name={sizeHinges.name}
           render={({ field }) => (
-            <Field>
+            <UIField>
               <FieldLabel className="text-base font-semibold" asChild>
                 <h2>{sizeHinges.label}</h2>
               </FieldLabel>
               <SizeRadioGroup field={field} options={sizeHinges.options} />
-            </Field>
+            </UIField>
           )}
         />
       )}
@@ -540,14 +650,14 @@ const SizeRadioGroup = ({ options, field }: RadioGroupProps) => {
     >
       {options &&
         options.map((item, index) => (
-          <Field key={`product-detail-1-size-input-${index}`}>
+          <UIField key={`product-detail-1-size-input-${index}`}>
             <SizeOption
               stockInfo={item.stockInfo}
               id={item.id}
               label={item.label}
               value={item.value}
             />
-          </Field>
+          </UIField>
         ))}
     </RadioGroup>
   );
