@@ -4,6 +4,7 @@ import { CircleCheck, Star, StarHalf } from "lucide-react";
 import { Controller, ControllerRenderProps, useForm } from "react-hook-form";
 import z from "zod";
 
+
 import { cn } from "@/lib/utils";
 
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -26,6 +27,7 @@ import { redirect } from "next/navigation";
 import { authClient } from "@/src/app/lib/auth-client";
 import { getSession } from "@/server action/auth.action";
 import { ItemGroupExample } from "./module/getFoodById/review";
+import StarRating_Basic from "./commerce-ui/star-rating-basic";
 type StockStatusCode = "IN_STOCK" | "OUT_OF_STOCK";
 
 interface StockInfo {
@@ -226,6 +228,8 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
 
   console.log("food details", food?.reviews);
 
+  const [rating, setRating] = useState(3);
+
   return (
     <section className={cn("py-32", className)}>
       <div className="container">
@@ -314,6 +318,14 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
                 },
               ]}
             />
+            {/* add review  section start from here*/}
+
+            
+
+            <div className="flex flex-row items-center justify-center gap-4">
+      <StarRating_Basic value={rating} onChange={setRating} maxStars={5} />
+      <p>({rating})</p>
+    </div>
 
             <div>
               {food?.reviews?.map((review) => (

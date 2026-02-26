@@ -1,6 +1,8 @@
+
 import * as React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+
 import {
   Item,
   ItemActions,
@@ -13,6 +15,7 @@ import {
 } from "@/components/ui/item";
 import { Star } from "lucide-react";
 import { ReviewData, UserData } from "@/src/constants/food.types";
+import StarRating_Basic from "@/components/commerce-ui/star-rating-basic";
 
 const people = [
   {
@@ -23,7 +26,7 @@ const people = [
 ];
 
 export function ItemGroupExample({ reviews }: { reviews: ReviewData }) {
-  console.log("reviews", reviews);
+
   return (
     <ItemGroup className="max-w-auto">
       {people.map((person, index) => (
@@ -41,6 +44,7 @@ export function ItemGroupExample({ reviews }: { reviews: ReviewData }) {
             <ItemTitle>{reviews?.user?.name}</ItemTitle>
             <ItemDescription>{reviews?.comment}</ItemDescription>
           </ItemContent>
+          
           <div className="flex items-center gap-1 ml-auto">
             {reviews?.rating}
             <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
