@@ -1,6 +1,30 @@
 
 
 
+export interface UserData {
+    createdAt: string;
+    email:string;
+    emailVerified: boolean;
+    id: string;
+    image:string | null;
+    name: string;
+    phone: string | null;
+    roles: string;
+    status: string;
+    updatedAt: string;
+}
+
+
+export interface ReviewData {
+    id:string;
+    userId:string;
+    mealId:string;
+    providerId:string;
+    rating:number;
+    comment:string;
+    user: UserData;
+}
+
 
 interface foodSingleData {
     id: string;
@@ -15,6 +39,7 @@ interface foodSingleData {
     discountPrice?: number;
     imageUrl: string | null;
     rating?: number;
+    reviews?: ReviewData[];
     total_reviews?: number;
     isAvailable: boolean;
     created_at: string;

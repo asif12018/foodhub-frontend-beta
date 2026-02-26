@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import { redirect } from "next/navigation";
 import { authClient } from "@/src/app/lib/auth-client";
 import { getSession } from "@/server action/auth.action";
+import { ItemGroupExample } from "./module/getFoodById/review";
 type StockStatusCode = "IN_STOCK" | "OUT_OF_STOCK";
 
 interface StockInfo {
@@ -223,6 +224,8 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
     }
   };
 
+  console.log("food details", food?.reviews);
+
   return (
     <section className={cn("py-32", className)}>
       <div className="container">
@@ -290,7 +293,8 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
               </div>
             </div>
 
-            <Button disabled={sessionData?.user?.roles !== "Customer"}
+            <Button
+              disabled={sessionData?.user?.roles !== "Customer"}
               onClick={() => handleCreateOrder()}
               size="lg"
               className="w-full"
@@ -310,6 +314,12 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
                 },
               ]}
             />
+
+            <div>
+              {food?.reviews?.map((review) => (
+                <ItemGroupExample key={review.id} reviews={review} />
+              ))}
+            </div>
           </div>
         </div>
       </div>
