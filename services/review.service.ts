@@ -46,6 +46,23 @@ export const reviewService = {
       };
     }
   },
+  getOrderByMealIdAndUserId: async(mealId: string)=>{
+    try{
+       const cookieStore = await cookies();
+       const res = await fetch(`${API_URL}/api/order/mealData/${mealId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        credentials: "include",
+        cache: "no-store",
+      });
+      const data = await res.json();
+      return { data: data, error: null };
+    }catch(err:any){
+      return {data:null, error:err.message}
+    }
+  },
   createReviewByMealId: async (
     mealId: string,
     rating: number,

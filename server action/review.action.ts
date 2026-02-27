@@ -13,3 +13,9 @@ export const getReviewByMealIdAction = async (mealId: string)=>{
     const res = await reviewService.getReviewByMealId(mealId);
     return res;
 }
+
+
+export const getOrderByMealIdAndUserIdAction = async (mealId: string)=>{
+    const res = await reviewService.getOrderByMealIdAndUserId(mealId);
+    return res;
+}

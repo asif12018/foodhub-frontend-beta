@@ -34,7 +34,11 @@ import { ItemGroupExample } from "./module/getFoodById/review";
 import StarRating_Basic from "./commerce-ui/star-rating-basic";
 import { reviewService } from "@/services/review.service";
 import { Input } from "./ui/input";
-import { createReviewAction, getReviewByMealIdAction } from "@/server action/review.action";
+import {
+  createReviewAction,
+  getOrderByMealIdAndUserIdAction,
+  getReviewByMealIdAction,
+} from "@/server action/review.action";
 type StockStatusCode = "IN_STOCK" | "OUT_OF_STOCK";
 
 interface StockInfo {
@@ -192,6 +196,7 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
   const [sessionData, setSessionData] = useState<any>(null);
 
   const [isReviewed, setIsReviewed] = useState(false);
+  const [isOrdered, setIsOrdered] = useState(false);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -223,19 +228,34 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
 
   //get review by meal id
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchReview = async () => {
       const { data, error } = await getReviewByMealIdAction(food.id);
       // console.log("this is review data", data)
       // console.log(error, "this is error")
-      if (data?.success) {
+      if (data?.data?.length !== 0) {
         setIsReviewed(true);
-        // console.log(data, "this is review data")
+        console.log(data, "this is review data");
       }
     };
- 
+
     fetchReview();
-  },[food.id, sessionData?.user])
+  }, [food.id, sessionData?.user]);
+
+  //get mealdata by meal id
+
+  useEffect(() => {
+    const fetchFoodData = async () => {
+      const { data, error } = await getOrderByMealIdAndUserIdAction(food.id);
+      if (data?.data?.length !== 0) {
+        console.log("food data:", data);
+        setIsOrdered(true);
+      }
+    };
+    fetchFoodData();
+  }, [food.id, sessionData?.data]);
+
+  //get order by mealid and user id
 
   //create order
 
@@ -257,7 +277,7 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
   // console.log("food details", food?.reviews);
 
   const [rating, setRating] = useState(3);
-  console.log("rating", rating);
+  // console.log("rating", rating);
 
   //set review function start from here
 
@@ -385,57 +405,90 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
             />
             {/* add review  section start from here*/}
 
-
-            {
-              sessionData?.user?.roles === "Customer" && (
+            {/* {sessionData?.user?.roles === "Customer" && (
               <>
-                 <form id="review-form" onSubmit={form.handleSubmit(onSubmitReview)}>
-              <FieldGroup>
-                <Controller
-                  control={form.control}
-                  name="comment"
-                  render={({ field, fieldState }) => {
-                    const isInvalid =
-                      fieldState.isTouched && fieldState.invalid;
-                    return (
-                      <UIField>
-                        <FieldLabel htmlFor={field.name}>Comment</FieldLabel>
-                        <Input type="text" id={field.name} {...field} />
-                        {isInvalid && fieldState.error && (
-                          <FieldError
-                            errors={[{ message: fieldState.error.message }]}
-                          />
-                        )}
-                      </UIField>
-                    );
-                  }}
-                />
+                <form
+                  id="review-form"
+                  onSubmit={form.handleSubmit(onSubmitReview)}
+                >
+                  <FieldGroup>
+                    <Controller
+                      control={form.control}
+                      name="comment"
+                      render={({ field, fieldState }) => {
+                        const isInvalid =
+                          fieldState.isTouched && fieldState.invalid;
+                        return (
+                          <UIField>
+                            <FieldLabel htmlFor={field.name}>
+                              Comment
+                            </FieldLabel>
+                            <Input type="text" id={field.name} {...field} />
+                            {isInvalid && fieldState.error && (
+                              <FieldError
+                                errors={[{ message: fieldState.error.message }]}
+                              />
+                            )}
+                          </UIField>
+                        );
+                      }}
+                    />
 
-                <UIField>
-                  <Button form="review-form" type="submit">
-                    Submit Review
-                  </Button>
-                </UIField>
-              </FieldGroup>
-            </form>
+                    <UIField>
+                      <Button form="review-form" type="submit">
+                        Submit Review
+                      </Button>
+                    </UIField>
+                  </FieldGroup>
+                </form>
 
-             <div className="flex flex-row items-center justify-center gap-4">
-              <StarRating_Basic
-                value={rating}
-                onChange={setRating}
-                maxStars={5}
-              />
-              <p>({rating})</p>
-            </div>
-            
-            </>
-            
-              )
-            }
+                <div className="flex flex-row items-center justify-center gap-4">
+                  <StarRating_Basic
+                    value={rating}
+                    onChange={setRating}
+                    maxStars={5}
+                  />
+                  <p>({rating})</p>
+                </div>
+              </>
+            )} */}
 
-            
-
-           
+            {/* Replace your existing review section with this logic */}
+{sessionData?.user?.roles === "Customer" && (
+                <div className="mb-8">
+                  {!isOrdered ? (
+                    <div className="bg-muted p-4 rounded-lg text-sm">
+                      Only customers who have purchased this meal can leave a review.
+                    </div>
+                  ) : isReviewed ? (
+                    <div className="bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400 p-4 rounded-lg text-sm border border-green-100 dark:border-green-900">
+                      You have already shared your thoughts on this meal. Thank you!
+                    </div>
+                  ) : (
+                    <div className="space-y-4 bg-accent/30 p-4 rounded-xl">
+                      <p className="font-medium">Rate your experience</p>
+                      <div className="flex items-center gap-4">
+                        <StarRating_Basic value={rating} onChange={setRating} maxStars={5} />
+                        <span className="font-bold text-lg">{rating} / 5</span>
+                      </div>
+                      <form onSubmit={form.handleSubmit(onSubmitReview)} className="space-y-4">
+                        <Controller
+                          control={form.control}
+                          name="comment"
+                          render={({ field, fieldState }) => (
+                            <UIField>
+                              <FieldLabel>Your Review</FieldLabel>
+                              <Input {...field} placeholder="How was the taste?" />
+                              {fieldState.error && <FieldError errors={[{ message: fieldState.error.message }]} />}
+                            </UIField>
+                          )}
+                        />
+                        <Button type="submit">Submit Review</Button>
+                      </form>
+                    </div>
+                  )}
+                </div>
+              )}
 
             <div>
               {food?.reviews?.map((review) => (
@@ -577,7 +630,7 @@ const ProductForm = ({ hinges, selected }: ProductFormProps) => {
   });
 
   function onSubmit(values: FormType) {
-    console.log(values);
+    // console.log(values);
   }
 
   const sizeHinges = hinges?.size;

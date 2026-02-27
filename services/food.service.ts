@@ -112,5 +112,5 @@ export const foodService = {
         error: { message: err.message || "Something went wrong" },
       };
     }
-  },
+  }
 };
