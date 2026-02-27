@@ -4,7 +4,7 @@ import * as React from "react";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,25 +25,50 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { getAllCategory } from "@/server action/category.action";
-import { createMenu } from "@/server action/food.action";
+import { createMenu, updateMenuAction } from "@/server action/food.action";
 
 const formSchema = z.object({
-  category_id: z.string().min(1, "Category is required"),
-  name: z.string().min(3, "Name must be at least 3 characters long"),
+  category_id: z
+    .union([z.string(), z.undefined()])
+    .transform((v) => (v === "" ? undefined : v)),
+  name: z
+    .union([
+      z.string().min(3, "Name must be at least 3 characters long"),
+      z.literal(""),
+      z.undefined(),
+    ])
+    .transform((v) => (v === "" ? undefined : v)),
   description: z
-    .string()
-    .min(5, "Description must be at least 3 characters long"),
-  price: z.number().min(1, "Price must be at least 1"),
-  discountPrice: z
-    .union([z.number().min(0, "Discount price must be at least 0"), z.nan()])
-    .optional(),
-  prepTimeMinutes: z.number().min(1, "Preparation minutes must be at least 1"),
-  dietary_tags: z.array(z.string()).min(1, "Dietary tags must be at least 1"),
+    .union([
+      z.string().min(5, "Description must be at least 5 characters long"),
+      z.literal(""),
+      z.undefined(),
+    ])
+    .transform((v) => (v === "" ? undefined : v)),
+  price: z.union([
+    z
+      .number({ message: "Price must be a number" })
+      .min(1, "Price must be at least 1"),
+    z.undefined(),
+  ]),
+  discountPrice: z.union([
+    z
+      .number({ message: "Discount price must be a number" })
+      .min(0, "Discount price must be at least 0"),
+    z.undefined(),
+  ]),
+  prepTimeMinutes: z.union([
+    z
+      .number({ message: "Preparation minutes must be a number" })
+      .min(1, "Preparation minutes must be at least 1"),
+    z.undefined(),
+  ]),
+  dietary_tags: z.union([z.array(z.string()), z.undefined()]),
 });
 
 const DIETARY_TAGS = ["HALAL", "VEG", "KETO", "GLUTEN_FREE", "DAIRY_FREE"];
 
-export function AddMenuForm() {
+export function EditMenuForm() {
   const [categories, setCategories] = React.useState<any[]>([]);
 
   React.useEffect(() => {
@@ -62,34 +87,45 @@ export function AddMenuForm() {
 
   const router = useRouter();
 
+  const params = useParams();
+  const menuId = params.id;
+  console.log(menuId, "this is menuid");
+
   const form = useForm({
     defaultValues: {
-      category_id: "",
-      name: "",
-      description: "",
-      price: "" as unknown as number,
-      discountPrice: undefined,
-      prepTimeMinutes: "" as unknown as number,
-      dietary_tags: [] as string[],
-    } as z.infer<typeof formSchema>,
+      category_id: undefined as string | undefined,
+      name: undefined as string | undefined,
+      description: undefined as string | undefined,
+      price: undefined as number | undefined,
+      discountPrice: undefined as number | undefined,
+      prepTimeMinutes: undefined as number | undefined,
+      dietary_tags: [] as string[] | undefined,
+    },
     validators: {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
       try {
-        console.log("this is value", value);
-        const res = await createMenu(value);
-        console.log("this is res from add menu", res);
+        // Filter out any undefined or empty array properties for the PATCH request
+        const patchData = Object.fromEntries(
+          Object.entries(value).filter(
+            ([_, v]) =>
+              v !== undefined && !(Array.isArray(v) && v.length === 0),
+          ),
+        );
 
+        // await updateMenu(menuId, patchData); // Replace with actual PATCH action
+
+        const res = await updateMenuAction(menuId as string, patchData);
         if (res.error) {
           toast.error(res.error.message);
         } else {
-          toast.success(res.data?.message);
+          toast.success("Menu updated successfully");
           router.push("/");
-          window.location.href = "/";
         }
+
       } catch (err: any) {
-        toast.error("Failed to add menu", err.message);
+        toast.error("Failed to update menu: " + err.message);
       }
     },
   });
@@ -99,10 +135,10 @@ export function AddMenuForm() {
       <Card className="w-full max-w-2xl">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
-            Add Menu
+            Edit Menu
           </CardTitle>
           <CardDescription className="text-center">
-            Create a new menu item by filling out the details below.
+            Edit a menu item by filling out the details below.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -128,7 +164,7 @@ export function AddMenuForm() {
                       <Input
                         id={field.name}
                         name={field.name}
-                        value={field.state.value}
+                        value={field.state.value || ""}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
                         aria-invalid={isInvalid}
@@ -154,7 +190,7 @@ export function AddMenuForm() {
                         <select
                           id={field.name}
                           name={field.name}
-                          value={field.state.value}
+                          value={field.state.value || ""}
                           onBlur={field.handleBlur}
                           onChange={(e) => field.handleChange(e.target.value)}
                           aria-invalid={isInvalid}
@@ -195,11 +231,13 @@ export function AddMenuForm() {
                           type="number"
                           name={field.name}
                           value={
-                            field.state.value === 0 &&
-                            (field.state.value as any) !== "" &&
-                            typeof field.state.value !== "string"
+                            field.state.value === undefined
                               ? ""
-                              : field.state.value
+                              : field.state.value === 0 &&
+                                  (field.state.value as any) !== "" &&
+                                  typeof field.state.value !== "string"
+                                ? ""
+                                : field.state.value
                           }
                           onBlur={field.handleBlur}
                           onChange={(e) =>
@@ -235,11 +273,13 @@ export function AddMenuForm() {
                           type="number"
                           name={field.name}
                           value={
-                            field.state.value === 0 &&
-                            (field.state.value as any) !== "" &&
-                            typeof field.state.value !== "string"
+                            field.state.value === undefined
                               ? ""
-                              : field.state.value
+                              : field.state.value === 0 &&
+                                  (field.state.value as any) !== "" &&
+                                  typeof field.state.value !== "string"
+                                ? ""
+                                : field.state.value
                           }
                           onBlur={field.handleBlur}
                           onChange={(e) =>
@@ -275,8 +315,7 @@ export function AddMenuForm() {
                           type="number"
                           name={field.name}
                           value={
-                            field.state.value === undefined ||
-                            Number.isNaN(field.state.value)
+                            field.state.value === undefined
                               ? ""
                               : field.state.value === 0 &&
                                   (field.state.value as any) !== "" &&
@@ -285,14 +324,13 @@ export function AddMenuForm() {
                                 : field.state.value
                           }
                           onBlur={field.handleBlur}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            if (val === "") {
-                              field.handleChange(undefined);
-                            } else {
-                              field.handleChange(Number(val));
-                            }
-                          }}
+                          onChange={(e) =>
+                            field.handleChange(
+                              e.target.value === ""
+                                ? ("" as unknown as number)
+                                : Number(e.target.value),
+                            )
+                          }
                           aria-invalid={isInvalid}
                           placeholder="900"
                         />
@@ -316,7 +354,7 @@ export function AddMenuForm() {
                       <textarea
                         id={field.name}
                         name={field.name}
-                        value={field.state.value}
+                        value={field.state.value || ""}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
                         placeholder="Fresh prawns grilled with garlic and spices."

@@ -1,4 +1,5 @@
 import { env } from "@/env";
+import { MenuData, UpdateMenuData } from "@/src/constants/menu.types";
 import { cookies } from "next/headers";
 
 const API_URL = env.BACKEND_URL;
@@ -134,6 +135,67 @@ export const foodService = {
         error: { message: err.message || "Something went wrong" },
       };
     }
+  },
+
+  createMenu: async function (data: MenuData) {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${API_URL}/api/provider/menu`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await res.json();
+      return { data: result, error: null };
+    } catch (err: any) {
+      return {
+        data: null,
+        error: { message: err.message || "Something went wrong" },
+      };
+    }
+  },
+  updateMenu: async function (id: string, data: UpdateMenuData){
+  try{
+    const cookieStore = await cookies();
+    const res = await fetch(`${API_URL}/api/provider/menu/${id}`,{
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieStore.toString(),
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+    return { data: result, error: null };
+  }catch(err:any){
+    return {
+      data: null,
+      error: { message: err.message || "Something went wrong" },
+    };
+  }
+  },
+  deleteMenu: async function (id: string){
+       try{
+        const cookieStore = await cookies();
+        const res = await fetch(`${API_URL}/api/provider/menu/${id}`,{
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: cookieStore.toString(),
+          },
+        });
+        const result = await res.json();
+        return { data: result, error: null };
+       }catch(err:any){
+        return {
+          data: null,
+          error: { message: err.message || "Something went wrong" },
+        }
+       }
   },
   getMinMaxPrice: async function () {
     try {

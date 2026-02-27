@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Pagination,
   PaginationContent,
@@ -17,6 +19,10 @@ import {
 } from "@/components/ui/table";
 import foodSingleData from "@/src/constants/food.types";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { deleteMenuAction } from "@/server action/food.action";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const products = [
   {
@@ -58,11 +64,25 @@ const products = [
 
 export default function TableWithPaginationDemo({
   value,
-
 }: {
   value: foodSingleData[];
- 
 }) {
+  const router = useRouter();
+  //deletation function start from here
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await deleteMenuAction(id);
+      console.log("this is res from deletemenu", res);
+      if (res.error) {
+        toast.error(res.error.message);
+      } else {
+        toast.success("Menu deleted successfully");
+        router.refresh();
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Something went wrong");
+    }
+  };
 
   return (
     <div className="w-full">
@@ -90,18 +110,23 @@ export default function TableWithPaginationDemo({
                   {product?.discountPrice ? product?.discountPrice : "N/A"} tk
                 </TableCell>
                 <TableCell>
-                  <Button>Edit</Button>
+                  <Button>
+                    <Link href={`/my-menu/${product?.id}`}>Edit</Link>
+                  </Button>
                 </TableCell>
                 <TableCell>
-                  <Button>Delete</Button>
+                  <Button
+                    onClick={() => handleDelete(product.id)}
+                    className="bg-red-500"
+                  >
+                    Delete
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
-
-      
     </div>
   );
 }

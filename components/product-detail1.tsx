@@ -39,6 +39,7 @@ import {
   getOrderByMealIdAndUserIdAction,
   getReviewByMealIdAction,
 } from "@/server action/review.action";
+import { createOrder } from "@/server action/order.action";
 type StockStatusCode = "IN_STOCK" | "OUT_OF_STOCK";
 
 interface StockInfo {
@@ -260,7 +261,8 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
   //create order
 
   const handleCreateOrder = async () => {
-    const { data, error } = await orderService.createOrder(food.id, quantity);
+    // const { data, error } = await orderService.createOrder(food.id, quantity);
+    const {data, error} = await createOrder(food.id, quantity);
     if (data?.success) {
       toast.success(data.message);
       redirect("/");
