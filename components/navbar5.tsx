@@ -125,14 +125,7 @@ const Navbar = ({ className }: Navbar5Props) => {
                   home
                 </Link>
               </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="#"
-                  className={navigationMenuTriggerStyle()}
-                >
-                  Resources
-                </NavigationMenuLink>
-              </NavigationMenuItem>
+          
               <NavigationMenuItem>
                 <NavigationMenuLink
                   href="#"
@@ -151,6 +144,29 @@ const Navbar = ({ className }: Navbar5Props) => {
                 >
                   {
                     sessionDatas?.user?.roles === "Customer" && <Link href="/cart"> Cart</Link>
+                  }
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+               <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="#"
+                  className={navigationMenuTriggerStyle()}
+                  asChild
+                >
+                  {
+                    sessionDatas?.user?.roles === "Provider" && <Link href="/my-menu"> My menu</Link>
+                  }
+                </NavigationMenuLink>
+                 
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="#"
+                  className={navigationMenuTriggerStyle()}
+                  asChild
+                >
+                  {
+                    sessionDatas?.user?.roles === "Provider" && <Link href="/add-menu"> Add Menu</Link>
                   }
                 </NavigationMenuLink>
               </NavigationMenuItem>
@@ -218,6 +234,17 @@ const Navbar = ({ className }: Navbar5Props) => {
                   {
                     sessionDatas?.user?.roles === "Customer" && (
                       <Link href="/cart" className="font-medium">Cart</Link>
+                    )
+                  }
+
+                  {
+                    sessionDatas?.user?.roles === "Provider" && (
+                      <Link href="/my-menu" className="font-medium">My menu</Link>
+                    )
+                  }
+                  {
+                    sessionDatas?.user?.roles === "Provider" && (
+                      <Link href="/add-menu" className="font-medium">Add Menu</Link>
                     )
                   }
                   <a href="#" className="font-medium">

@@ -26,10 +26,21 @@ export interface ReviewData {
 }
 
 
+interface Category{
+    id: string;
+    icon: string | null;
+    name: string;
+    isDeleted: boolean;
+    updatedAt: string;
+    createdAt: string;
+}
+
+
 interface foodSingleData {
     id: string;
     provider_id: string;
     category_id: string;
+    category?: Category;
     name: string;
     description: string;
     cusine: string;

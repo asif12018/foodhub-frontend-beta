@@ -1,8 +1,9 @@
 import { env } from "@/env";
+import { cookies } from "next/headers";
 
 const API_URL = env.BACKEND_URL;
 
-interface GetFoodParams {
+export interface GetFoodParams {
   isFeatured?: boolean;
   cuisine?: string;
   dietary_tags?: string[];
@@ -99,6 +100,41 @@ export const foodService = {
       };
     }
   },
+  getMyMenu: async function (params?: GetFoodParams) {
+    try {
+      const cookieStore = await cookies();
+      const url = new URL(`${API_URL}/api/provider/my-menu/me`);
+      if (params) {
+        Object.entries(params).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== "") {
+            url.searchParams.append(key, String(value));
+          }
+        });
+      }
+
+      const res = await fetch(url.toString(), {
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+      });
+
+      // const res = await fetch(`${API_URL}/api/provider/my-menu/me`,{
+      //   headers:{
+      //     "Content-Type": "application/json",
+      //     Cookie: cookieStore.toString(),
+      //   }
+      // });
+      const data = await res.json();
+      return { data: data, error: null };
+    } catch (err: any) {
+      console.log("error from get my menu", err);
+      return {
+        data: null,
+        error: { message: err.message || "Something went wrong" },
+      };
+    }
+  },
   getMinMaxPrice: async function () {
     try {
       const url = new URL(`${API_URL}/api/provider/price`);
@@ -112,5 +148,5 @@ export const foodService = {
         error: { message: err.message || "Something went wrong" },
       };
     }
-  }
+  },
 };
