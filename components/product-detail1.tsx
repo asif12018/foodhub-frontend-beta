@@ -455,7 +455,7 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
               </>
             )} */}
 
-            {/* Replace your existing review section with this logic */}
+            {/* Repling  existing review section with this logic if not work then i will use it above one*/}
 {sessionData?.user?.roles === "Customer" && (
                 <div className="mb-8">
                   {!isOrdered ? (

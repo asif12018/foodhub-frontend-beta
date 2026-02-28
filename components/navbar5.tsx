@@ -3,8 +3,7 @@
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { usePathname } from 'next/navigation';
-
+import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -39,12 +38,9 @@ const Navbar = ({ className }: Navbar5Props) => {
   const [sessionDatas, setSessionDatas] = useState<any>(null);
   const [error, setError] = useState<any>(null);
 
-
-
-  
   const [isPending, setIsPending] = useState(false);
-    const pathname = usePathname()
-    useEffect(() => {
+  const pathname = usePathname();
+  useEffect(() => {
     const fetchSession = async () => {
       const { data, error } = await getSession();
       setError(error);
@@ -56,9 +52,7 @@ const Navbar = ({ className }: Navbar5Props) => {
 
   // console.log("this is error from session", error)
 
-  // console.log("this is session data", sessionDatas?.user?.roles);
-
-
+  console.log("this is session data", sessionDatas?.user);
 
   // Use better-auth's reactive hook! It automatically updates across tabs and after login.
   const {
@@ -67,7 +61,6 @@ const Navbar = ({ className }: Navbar5Props) => {
     refetch,
   } = authClient.useSession();
   const session = sessionData?.session;
-
 
   // console.log("this is session", session)
 
@@ -125,7 +118,7 @@ const Navbar = ({ className }: Navbar5Props) => {
                   home
                 </Link>
               </NavigationMenuItem>
-          
+
               <NavigationMenuItem>
                 <NavigationMenuLink
                   href="#"
@@ -136,28 +129,16 @@ const Navbar = ({ className }: Navbar5Props) => {
                 </NavigationMenuLink>
               </NavigationMenuItem>
 
-               <NavigationMenuItem>
+              <NavigationMenuItem>
                 <NavigationMenuLink
                   href="#"
                   className={navigationMenuTriggerStyle()}
                   asChild
                 >
-                  {
-                    sessionDatas?.user?.roles === "Customer" && <Link href="/cart"> Cart</Link>
-                  }
+                  {sessionDatas?.user?.roles === "Customer" && (
+                    <Link href="/cart"> Cart</Link>
+                  )}
                 </NavigationMenuLink>
-              </NavigationMenuItem>
-               <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="#"
-                  className={navigationMenuTriggerStyle()}
-                  asChild
-                >
-                  {
-                    sessionDatas?.user?.roles === "Provider" && <Link href="/my-menu"> My menu</Link>
-                  }
-                </NavigationMenuLink>
-                 
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink
@@ -165,9 +146,31 @@ const Navbar = ({ className }: Navbar5Props) => {
                   className={navigationMenuTriggerStyle()}
                   asChild
                 >
-                  {
-                    sessionDatas?.user?.roles === "Provider" && <Link href="/add-menu"> Add Menu</Link>
-                  }
+                  {sessionDatas?.user?.roles === "Provider" && (
+                    <Link href="/my-menu"> My menu</Link>
+                  )}
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="#"
+                  className={navigationMenuTriggerStyle()}
+                  asChild
+                >
+                  {sessionDatas?.user?.roles === "Provider" && (
+                    <Link href="/add-menu"> Add Menu</Link>
+                  )}
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="#"
+                  className={navigationMenuTriggerStyle()}
+                  asChild
+                >
+                  {sessionDatas?.user?.roles === "Provider" && (
+                    <Link href="/my-order"> My Order</Link>
+                  )}
                 </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
@@ -183,9 +186,12 @@ const Navbar = ({ className }: Navbar5Props) => {
               //   disabled={isPending}
               //   variant="outline"
               // >
-              //   {isPending ? "Signing out..." : "Sign out"}
-              // </Button>
-              <ProfileIcon onLogout={handleLogout} isLoggingOut={isPending} />
+              <ProfileIcon
+                sessionData = {sessionDatas}
+                userData={sessionData?.user}
+                onLogout={handleLogout}
+                isLoggingOut={isPending}
+              />
             ) : (
               // USER NOT LOGGED IN
               <Button asChild variant="outline">
@@ -231,36 +237,40 @@ const Navbar = ({ className }: Navbar5Props) => {
                   <Link href="/allFood" className="font-medium">
                     Menu
                   </Link>
-                  {
-                    sessionDatas?.user?.roles === "Customer" && (
-                      <Link href="/cart" className="font-medium">Cart</Link>
-                    )
-                  }
+                  {sessionDatas?.user?.roles === "Customer" && (
+                    <Link href="/cart" className="font-medium">
+                      Cart
+                    </Link>
+                  )}
 
-                  {
-                    sessionDatas?.user?.roles === "Provider" && (
-                      <Link href="/my-menu" className="font-medium">My menu</Link>
-                    )
-                  }
-                  {
-                    sessionDatas?.user?.roles === "Provider" && (
-                      <Link href="/add-menu" className="font-medium">Add Menu</Link>
-                    )
-                  }
+                  {sessionDatas?.user?.roles === "Provider" && (
+                    <Link href="/my-menu" className="font-medium">
+                      My menu
+                    </Link>
+                  )}
+                  {sessionDatas?.user?.roles === "Provider" && (
+                    <Link href="/add-menu" className="font-medium">
+                      Add Menu
+                    </Link>
+                  )}
+                  {sessionDatas?.user?.roles === "Provider" && (
+                    <Link href="/my-order" className="font-medium">
+                      My Order
+                    </Link>
+                  )}
                   <a href="#" className="font-medium">
                     Pricing
                   </a>
                 </div>
                 <div className="mt-6 flex flex-col gap-4">
                   {loading ? null : session ? (
-                    // <Button
-                    //   onClick={handleLogout}
-                    //   disabled={isPending}
-                    //   variant="outline"
-                    // >
                     //   {isPending ? "Signing out..." : "Sign out"}
                     // </Button>
-                    <ProfileIcon onLogout={handleLogout} isLoggingOut={isPending} />
+                    <ProfileIcon
+                      userData={sessionData?.user}
+                      onLogout={handleLogout}
+                      isLoggingOut={isPending}
+                    />
                   ) : (
                     <Link
                       href="/signin"

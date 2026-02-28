@@ -32,17 +32,56 @@ interface Login2Props {
 }
 
 //registration form schema
-const registrationSchema = z.object({
-  name: z.string().min(3, "Name must be at least 5 characters long"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters long"),
-  image: z.string().or(z.undefined()),
-  roles: z.enum(["Customer", "Provider"]),
-  phone: z
-    .string()
-    .min(11, "phone number must be 11 digit long")
-    .or(z.undefined()),
-});
+// const registrationSchema = z.object({
+//   name: z.string().min(3, "Name must be at least 5 characters long"),
+//   email: z.string().email("Invalid email address"),
+//   password: z.string().min(6, "Password must be at least 6 characters long"),
+//   image: z.string().or(z.undefined()),
+//   roles: z.enum(["Customer", "Provider"]),
+//   phone: z
+//     .string()
+//     .min(11, "phone number must be 11 digit long")
+//     .or(z.undefined()),
+// });
+
+const registrationSchema = z
+  .object({
+    name: z.string().min(3, "Name must be at least 3 characters long"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters long"),
+    image: z.string().optional(),
+    roles: z.enum(["Customer", "Provider"]),
+    phone: z.string().min(11, "Phone number must be 11 digits long").optional(),
+    // New Fields
+    RestaurantName: z.string().optional(),
+    address: z.string().optional(),
+    city: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.roles === "Provider") {
+      if (!data.RestaurantName) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Restaurant Name is required for Providers",
+          path: ["RestaurantName"],
+        });
+      }
+      if (!data.address) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Address is required for Providers",
+          path: ["address"],
+        });
+      }
+      if (!data.city) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "City is required for Providers",
+          path: ["city"],
+        });
+      }
+    }
+  });
 
 const RegisterForm = ({
   heading = "Register Now",
@@ -66,34 +105,57 @@ const RegisterForm = ({
       name: "",
       email: "",
       password: "",
-      phone: undefined as string | undefined,
-      image: undefined as string | undefined,
-      roles: "Customer" as "Customer" | "Provider",
-    },
+      phone: undefined,
+      image: undefined,
+      roles: "Customer",
+      RestaurantName: undefined,
+      address: undefined,
+      city: undefined,
+    } as z.infer<typeof registrationSchema>,
     validators: {
       onSubmit: registrationSchema,
     },
     onSubmit: async ({ value, formApi }) => {
       const toastId = toast("registration ongoing....");
       try {
-        const { error } = await authClient.signUp.email(value);
+        const { error } = await authClient.signUp.email({
+          email: value.email,
+          password: value.password,
+          name: value.name,
+          image: value.image,
+          roles: value.roles,
+          phone: value.phone,
+          fetchOptions: {
+            headers: {
+              ...(value.roles === "Provider" && value.RestaurantName
+                ? { "x-restaurant-name": value.RestaurantName }
+                : {}),
+              ...(value.roles === "Provider" && value.address
+                ? { "x-restaurant-address": value.address }
+                : {}),
+              ...(value.roles === "Provider" && value.city
+                ? { "x-restaurant-city": value.city }
+                : {}),
+            },
+          },
+        } as any);
 
-    if (error) {
-      // 2. Check for the specific email conflict error
-      if (error.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {
-        formApi.setFieldMeta("email", (prev) => ({
-          ...prev,
-          errors: ["This email is already registered."],
-        }));
-      }
+        if (error) {
+          // 2. Check for the specific email conflict error
+          if (error.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {
+            formApi.setFieldMeta("email", (prev) => ({
+              ...prev,
+              errors: ["This email is already registered."],
+            }));
+          }
 
-      toast.error(error.message, { id: toastId });
-      return; // Stop execution here
-    }
+          toast.error(error.message, { id: toastId });
+          return; // Stop execution here
+        }
 
-    toast.success("registration successful", { id: toastId });
-    await authClient.getSession();
-    window.location.href = "/";
+        toast.success("registration successful", { id: toastId });
+        await authClient.getSession();
+        window.location.href = "/";
       } catch (err) {
         toast.error("something went wrong", { id: toastId });
       }
@@ -116,153 +178,240 @@ const RegisterForm = ({
           <div className="flex w-full max-w-sm min-w-sm flex-col items-center gap-y-4 rounded-md border border-muted bg-background px-6 py-8 shadow-md">
             {heading && <h1 className="text-xl font-semibold">{heading}</h1>}
             <div className="flex w-full flex-col gap-2">
-          <form id="registration-form"
-          onSubmit={(e)=>{
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-          }}
-          >
+              <form
+                id="registration-form"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  form.handleSubmit();
+                }}
+              >
                 <form.Field
-                name="name"
-                children={(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
-                  return (
-                    <UIField>
-                      <FieldLabel htmlFor={field.name}>Name</FieldLabel>
-                      <Input
-                        type="text"
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                      ></Input>
-                      {isInvalid && (
-                        <FieldError
-                          errors={field.state.meta.errors}
-                        ></FieldError>
-                      )}
-                    </UIField>
-                  );
-                }}
-              />
+                  name="name"
+                  children={(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    return (
+                      <UIField>
+                        <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                        <Input
+                          type="text"
+                          id={field.name}
+                          name={field.name}
+                          value={field.state.value}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                        ></Input>
+                        {isInvalid && (
+                          <FieldError
+                            errors={field.state.meta.errors}
+                          ></FieldError>
+                        )}
+                      </UIField>
+                    );
+                  }}
+                />
 
-              <form.Field
-                name="email"
-                children={(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
-                  return (
-                    <UIField>
-                      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                      <Input
-                        type="email"
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                      ></Input>
-                      {isInvalid && (
-                        <FieldError
-                          errors={field.state.meta.errors}
-                        ></FieldError>
-                      )}
-                    </UIField>
-                  );
-                }}
-              />
+                <form.Field
+                  name="email"
+                  children={(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    return (
+                      <UIField>
+                        <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                        <Input
+                          type="email"
+                          id={field.name}
+                          name={field.name}
+                          value={field.state.value}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                        ></Input>
+                        {isInvalid && (
+                          <FieldError
+                            errors={field.state.meta.errors}
+                          ></FieldError>
+                        )}
+                      </UIField>
+                    );
+                  }}
+                />
 
-              <form.Field
-                name="password"
-                children={(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
-                  return (
-                    <UIField>
-                      <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                      <Input
-                        type="password"
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                      ></Input>
-                      {isInvalid && (
-                        <FieldError
-                          errors={field.state.meta.errors}
-                        ></FieldError>
-                      )}
-                    </UIField>
-                  );
-                }}
-              />
+                <form.Field
+                  name="password"
+                  children={(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    return (
+                      <UIField>
+                        <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                        <Input
+                          type="password"
+                          id={field.name}
+                          name={field.name}
+                          value={field.state.value}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                        ></Input>
+                        {isInvalid && (
+                          <FieldError
+                            errors={field.state.meta.errors}
+                          ></FieldError>
+                        )}
+                      </UIField>
+                    );
+                  }}
+                />
 
-              <form.Field
-                name="image"
-                children={(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
-                  return (
-                    <UIField>
-                      <FieldLabel htmlFor={field.name}>Image Url</FieldLabel>
-                      <Input
-                        type="text"
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                      ></Input>
-                      {isInvalid && (
-                        <FieldError
-                          errors={field.state.meta.errors}
-                        ></FieldError>
-                      )}
-                    </UIField>
-                  );
-                }}
-              />
+                <form.Field
+                  name="image"
+                  children={(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    return (
+                      <UIField>
+                        <FieldLabel htmlFor={field.name}>Image Url</FieldLabel>
+                        <Input
+                          type="text"
+                          id={field.name}
+                          name={field.name}
+                          value={field.state.value}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                        ></Input>
+                        {isInvalid && (
+                          <FieldError
+                            errors={field.state.meta.errors}
+                          ></FieldError>
+                        )}
+                      </UIField>
+                    );
+                  }}
+                />
 
-              <form.Field
-                name="roles"
-                children={(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched &&
-                    field.state.meta.errors.length > 0;
+                <form.Field
+                  name="roles"
+                  children={(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched &&
+                      field.state.meta.errors.length > 0;
 
-                  return (
-                    <UIField>
-                      <FieldLabel htmlFor={field.name}>Select Role</FieldLabel>
+                    return (
+                      <UIField>
+                        <FieldLabel htmlFor={field.name}>
+                          Select Role
+                        </FieldLabel>
 
-                      {/* Using a standard HTML select or your UI Library's Select component */}
-                      <select
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onChange={(e) =>
-                          field.handleChange(
-                            e.target.value as "Customer" | "Provider",
-                          )
-                        }
-                        className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        <option value="" disabled>
-                          Select a role...
-                        </option>
-                        <option value="Customer">Customer</option>
-                        <option value="Provider">Provider</option>
-                      </select>
+                        {/* Using a standard HTML select or your UI Library's Select component */}
+                        <select
+                          id={field.name}
+                          name={field.name}
+                          value={field.state.value}
+                          onChange={(e) =>
+                            field.handleChange(
+                              e.target.value as "Customer" | "Provider",
+                            )
+                          }
+                          className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <option value="" disabled>
+                            Select a role...
+                          </option>
+                          <option value="Customer">Customer</option>
+                          <option value="Provider">Provider</option>
+                        </select>
 
-                      {isInvalid && (
-                        <FieldError
-                          errors={field.state.meta.errors}
-                        ></FieldError>
-                      )}
-                    </UIField>
-                  );
-                }}
-              />
-          </form>
+                        {isInvalid && (
+                          <FieldError
+                            errors={field.state.meta.errors}
+                          ></FieldError>
+                        )}
+                      </UIField>
+                    );
+                  }}
+                />
+
+                {/*= extra code =*/}
+                {/* Conditional Fields for Provider */}
+                <form.Subscribe
+                  selector={(state) => state.values.roles}
+                  children={(roles) =>
+                    roles === "Provider" && (
+                      <>
+                        <form.Field
+                          name="RestaurantName"
+                          children={(field) => {
+                            const isInvalid =
+                              field.state.meta.isTouched &&
+                              field.state.meta.errors.length > 0;
+                            return (
+                              <UIField>
+                                <FieldLabel>Restaurant Name</FieldLabel>
+                                <Input
+                                  value={field.state.value || ""}
+                                  onChange={(e) =>
+                                    field.handleChange(e.target.value)
+                                  }
+                                />
+                                {isInvalid && (
+                                  <FieldError
+                                    errors={field.state.meta.errors}
+                                  />
+                                )}
+                              </UIField>
+                            );
+                          }}
+                        />
+                        <form.Field
+                          name="address"
+                          children={(field) => {
+                            const isInvalid =
+                              field.state.meta.isTouched &&
+                              field.state.meta.errors.length > 0;
+                            return (
+                              <UIField>
+                                <FieldLabel>Address</FieldLabel>
+                                <Input
+                                  value={field.state.value || ""}
+                                  onChange={(e) =>
+                                    field.handleChange(e.target.value)
+                                  }
+                                />
+                                {isInvalid && (
+                                  <FieldError
+                                    errors={field.state.meta.errors}
+                                  />
+                                )}
+                              </UIField>
+                            );
+                          }}
+                        />
+                        <form.Field
+                          name="city"
+                          children={(field) => {
+                            const isInvalid =
+                              field.state.meta.isTouched &&
+                              field.state.meta.errors.length > 0;
+                            return (
+                              <UIField>
+                                <FieldLabel>City</FieldLabel>
+                                <Input
+                                  value={field.state.value || ""}
+                                  onChange={(e) =>
+                                    field.handleChange(e.target.value)
+                                  }
+                                />
+                                {isInvalid && (
+                                  <FieldError
+                                    errors={field.state.meta.errors}
+                                  />
+                                )}
+                              </UIField>
+                            );
+                          }}
+                        />
+                      </>
+                    )
+                  }
+                />
+              </form>
             </div>
 
             <Button form="registration-form" type="submit" className="w-full">

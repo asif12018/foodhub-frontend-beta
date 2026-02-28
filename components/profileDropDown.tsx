@@ -12,19 +12,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { UserTypes } from "@/src/constants/user.types";
+import Link from "next/link";
 interface ProfileIconProps {
   onLogout?: () => void;
   isLoggingOut?: boolean;
+  userData?: any;
+  sessionData?: any;
 }
 
-const ProfileIcon = ({ onLogout, isLoggingOut }: ProfileIconProps) => (
+const ProfileIcon = ({
+  onLogout,
+  isLoggingOut,
+  userData,
+  sessionData
+}: ProfileIconProps) => (
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
       <Button className="relative h-10 w-10 rounded-full" variant="ghost">
         <Avatar>
           <AvatarImage
-            alt="@haydenbleasel"
-            src="https://github.com/haydenbleasel.png"
+            alt="profile image"
+            src={userData?.image || "https://github.com/haydenbleasel.png"}
           />
           <AvatarFallback>HB</AvatarFallback>
         </Avatar>
@@ -42,9 +51,11 @@ const ProfileIcon = ({ onLogout, isLoggingOut }: ProfileIconProps) => (
             <AvatarFallback>HB</AvatarFallback>
           </Avatar>
           <div className="flex flex-col space-y-1">
-            <p className="font-medium text-sm leading-none">Hayden Bleasel</p>
+            <p className="font-medium text-sm leading-none">
+              {userData?.name}
+            </p>
             <p className="text-muted-foreground text-xs leading-none">
-              hello@haydenbleasel.com
+              {userData?.email}
             </p>
             <Badge className="w-fit text-xs" variant="secondary">
               Pro
@@ -54,16 +65,30 @@ const ProfileIcon = ({ onLogout, isLoggingOut }: ProfileIconProps) => (
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuItem>
-        <User />
-        View Profile
+        {
+          userData?.roles === "Customer"  ? (
+            <>
+            <Link href="/profile" className="flex items-center gap-2"><User />
+        View Profile</Link>
+            </>
+          ) : null
+        }
       </DropdownMenuItem>
-      <DropdownMenuItem>
+      {/* <DropdownMenuItem>
         <CreditCard />
         Billing
-      </DropdownMenuItem>
+      </DropdownMenuItem> */}
       <DropdownMenuItem>
-        <Settings />
-        Account Settings
+    
+         {
+          userData?.roles === "Customer"  && (
+            <div className="flex items-center gap-1">
+            <Settings />
+            <Link href={"/editProfile"}>Edit Profile</Link>
+     </div>
+          )
+         }
+     
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem variant="destructive" onClick={onLogout}>

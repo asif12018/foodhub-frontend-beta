@@ -1,0 +1,124 @@
+
+> foodhub-frontend@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.1s
+  Running TypeScript ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/13) ...
+this is session data undefined
+this is session data undefined
+this is session data undefined
+this is session data undefined
+this is session data undefined
+this is category data {
+  success: true,
+  message: 'Category retrieved successfully',
+  data: [
+    {
+      id: 'ae871d9c-6c51-4f86-b54f-84d8314a6982',
+      name: 'Bangladeshi',
+      icon: null,
+      isDeleted: false,
+      createdAt: '2026-02-15T03:29:06.893Z',
+      updatedAt: '2026-02-15T03:29:06.893Z'
+    },
+    {
+      id: '9bfa3e37-278a-4a5f-9d79-db887231f356',
+      name: 'Chinese',
+      icon: null,
+      isDeleted: false,
+      createdAt: '2026-02-15T03:29:20.069Z',
+      updatedAt: '2026-02-15T03:29:20.069Z'
+    },
+    {
+      id: 'e5cb5837-4927-49e8-962f-c2715fb5034b',
+      name: 'Indian',
+      icon: null,
+      isDeleted: false,
+      createdAt: '2026-02-15T03:29:29.820Z',
+      updatedAt: '2026-02-15T03:29:29.820Z'
+    },
+    {
+      id: '7d3759de-8855-4b18-9b5e-8c6b7793c1aa',
+      name: 'Fast Food',
+      icon: null,
+      isDeleted: false,
+      createdAt: '2026-02-15T03:29:39.055Z',
+      updatedAt: '2026-02-15T03:29:39.055Z'
+    },
+    {
+      id: 'd4b930a8-65a8-4d93-99b6-21112ce06995',
+      name: 'Dessert',
+      icon: null,
+      isDeleted: false,
+      createdAt: '2026-02-15T03:29:48.225Z',
+      updatedAt: '2026-02-15T03:29:48.225Z'
+    },
+    {
+      id: '98c02cfe-b8de-4d65-a380-07fa7ecb8be2',
+      name: 'Beverages',
+      icon: null,
+      isDeleted: false,
+      createdAt: '2026-02-15T03:29:57.129Z',
+      updatedAt: '2026-02-15T03:29:57.129Z'
+    },
+    {
+      id: '07ddc0d7-60de-447b-bdd4-82c4c76b3197',
+      name: 'Pizza',
+      icon: null,
+      isDeleted: false,
+      createdAt: '2026-02-15T03:30:06.487Z',
+      updatedAt: '2026-02-15T03:30:06.487Z'
+    },
+    {
+      id: 'ec9b1486-8350-4ce5-9738-2300e0818c63',
+      name: 'Seafood',
+      icon: null,
+      isDeleted: false,
+      createdAt: '2026-02-15T03:30:14.257Z',
+      updatedAt: '2026-02-15T03:30:14.257Z'
+    },
+    {
+      id: '8249e576-e984-41fb-827e-5e8c1c41b1c3',
+      name: 'Healthy',
+      icon: null,
+      isDeleted: false,
+      createdAt: '2026-02-15T03:30:22.256Z',
+      updatedAt: '2026-02-15T03:30:22.256Z'
+    },
+    {
+      id: '633395b1-d354-472e-9331-1cfd610955f5',
+      name: 'Street Food',
+      icon: null,
+      isDeleted: false,
+      createdAt: '2026-02-15T03:30:30.841Z',
+      updatedAt: '2026-02-15T03:30:30.841Z'
+    }
+  ]
+}
+this is session data undefined
+  Generating static pages using 11 workers (3/13) 
+  Generating static pages using 11 workers (6/13) 
+Fetching food with URL: https://foodhub-backend-delta.vercel.app/api/provider/menu?isFeatured=false&limit=3&page=1
+Error: Dynamic server usage: Route / couldn't be rendered statically because it used revalidate: 0 fetch https://foodhub-backend-delta.vercel.app/api/provider/menu?isFeatured=false&limit=3&page=1 /. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at w (D:\Programing hero\Assingments All\batch-6-assignment-4\foodhub-frontend\.next\server\chunks\ssr\[root-of-the-server]__fdb71184._.js:1:88196)
+    at <unknown> (D:\Programing hero\Assingments All\batch-6-assignment-4\foodhub-frontend\.next\server\chunks\ssr\[root-of-the-server]__fdb71184._.js:8:10520) {
+  description: "Route / couldn't be rendered statically because it used revalidate: 0 fetch https://foodhub-backend-delta.vercel.app/api/provider/menu?isFeatured=false&limit=3&page=1 /. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+this is session data undefined
+this is session data undefined
+this is session data undefined
+this is session data undefined
+Error occurred prerendering page "/profile". Read more: https://nextjs.org/docs/messages/prerender-error
+TypeError: Cannot read properties of null (reading 'data')
+    at e (D:\Programing hero\Assingments All\batch-6-assignment-4\foodhub-frontend\.next\server\chunks\ssr\[root-of-the-server]__479bf83e._.js:1:1475) {
+  digest: '3524298771'
+}
+Export encountered an error on /(commondLayout)/profile/page: /profile, exiting the build.
+⨯ Next.js build worker exited with code: 1 and signal: null
