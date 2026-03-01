@@ -72,7 +72,8 @@ const Navbar = ({ className }: Navbar5Props) => {
         fetchOptions: {
           onSuccess: () => {
             toast.success("Signed out successfully", { id: toastId });
-            router.push("/");
+             window.location.reload();
+            // router.push("/");
           },
           onError: (ctx) => {
             toast.error(ctx.error.message || "Something went wrong", {

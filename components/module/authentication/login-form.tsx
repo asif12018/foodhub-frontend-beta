@@ -21,6 +21,7 @@ import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import { authClient } from "@/src/app/lib/auth-client";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 //from schema
 const loginSchema = z.object({
@@ -130,7 +131,7 @@ export function LoginForm({
                 </Button>
 
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="#">Sign up</a>
+                  Don&apos;t have an account? <Link href="/register">Sign up</Link>
                 </FieldDescription>
               </UIField>
             </FieldGroup>

@@ -1,10 +1,11 @@
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
 
 interface Hero1Props {
   badge?: string;
@@ -67,7 +68,7 @@ const Hero1 = ({
             <div className="flex w-full flex-col justify-center gap-2 sm:flex-row lg:justify-start">
               {buttons.primary && (
                 <Button asChild className="w-full sm:w-auto">
-                  <a href="#">View All Food</a>
+                  <Link href="/allFood">View All Food</Link>
                 </Button>
               )}
               

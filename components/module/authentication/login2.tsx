@@ -15,6 +15,7 @@ import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import { authClient } from "@/src/app/lib/auth-client";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 interface Login2Props {
   heading?: string;
   logo?: {
@@ -419,13 +420,13 @@ const RegisterForm = ({
             </Button>
           </div>
           <div className="flex justify-center gap-1 text-sm text-muted-foreground">
-            <p>{signupText}</p>
-            <a
-              href={signupUrl}
+            <p>Already have an account?</p>
+            <Link
+              href="/signin"
               className="font-medium text-primary hover:underline"
             >
-              Sign up
-            </a>
+              Sign in
+            </Link>
           </div>
         </div>
       </div>

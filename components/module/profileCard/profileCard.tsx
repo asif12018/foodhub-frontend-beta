@@ -25,6 +25,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { ProfileData } from "@/src/constants/profile.types";
+import Link from "next/link";
 
 interface ProfileFormData {
   name: string;
@@ -179,7 +180,9 @@ const SettingsProfile1 = ({
         </div>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
-        <Button>Edit Profile</Button>
+        <Button>
+          <Link href={"/editProfile"}>Edit Profile</Link>
+        </Button>
       </CardFooter>
     </Card>
   );
