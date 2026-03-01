@@ -40,6 +40,7 @@ import {
   getReviewByMealIdAction,
 } from "@/server action/review.action";
 import { createOrder } from "@/server action/order.action";
+import Link from "next/link";
 type StockStatusCode = "IN_STOCK" | "OUT_OF_STOCK";
 
 interface StockInfo {
@@ -198,6 +199,8 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
 
   const [isReviewed, setIsReviewed] = useState(false);
   const [isOrdered, setIsOrdered] = useState(false);
+
+  console.log("this is food", food);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -368,6 +371,11 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
               </p>
               <p className="text-muted-foreground">{food.description}</p>
               <p>Preparation time: {food.prepTimeMinutes} minutes</p>
+              <p>Cuisine: {food?.cuisine}</p>
+              <div>
+                <p>Restaurant Name: {food?.profile?.RestaurantName}</p>
+                <Link href={`/provider/${food?.profile?.id}`} className="text-blue-500">View Provider Profile</Link>
+              </div>
             </div>
 
             <div className="container mx-auto">

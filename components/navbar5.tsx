@@ -173,6 +173,17 @@ const Navbar = ({ className }: Navbar5Props) => {
                   )}
                 </NavigationMenuLink>
               </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="#"
+                  className={navigationMenuTriggerStyle()}
+                  asChild
+                >
+                  {sessionDatas?.user?.roles === "Admin" && (
+                    <Link href="/dashboard/adminStats"> Dashboard</Link>
+                  )}
+                </NavigationMenuLink>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
           <div className="hidden items-center gap-4 lg:flex">
@@ -258,9 +269,13 @@ const Navbar = ({ className }: Navbar5Props) => {
                       My Order
                     </Link>
                   )}
-                  <a href="#" className="font-medium">
-                    Pricing
-                  </a>
+
+                   {sessionDatas?.user?.roles === "Admin" && (
+                    <Link href="/dashboard/adminStats" className="font-medium">
+                      Dashboard
+                    </Link>
+                  )}
+                  
                 </div>
                 <div className="mt-6 flex flex-col gap-4">
                   {loading ? null : session ? (

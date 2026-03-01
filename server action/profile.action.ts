@@ -14,3 +14,10 @@ export const updateProfileAction = async (payload: any) => {
   revalidatePath("/editProfile");
   return result;
 };
+
+export const getProviderProfileByIdAction = async (providerId:string)=>{
+  const result = await profileService.getProviderProfileById(providerId);
+  return result;
+}
+
+

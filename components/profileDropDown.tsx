@@ -33,7 +33,7 @@ const ProfileIcon = ({
         <Avatar>
           <AvatarImage
             alt="profile image"
-            src={userData?.image || "https://github.com/haydenbleasel.png"}
+            src={userData?.image || "https://github.com/shadcn.png"}
           />
           <AvatarFallback>HB</AvatarFallback>
         </Avatar>
@@ -46,7 +46,7 @@ const ProfileIcon = ({
           <Avatar className="h-12 w-12">
             <AvatarImage
               alt="@haydenbleasel"
-              src="https://github.com/haydenbleasel.png"
+              src="https://github.com/shadcn.png"
             />
             <AvatarFallback>HB</AvatarFallback>
           </Avatar>
@@ -85,6 +85,19 @@ const ProfileIcon = ({
             <div className="flex items-center gap-1">
             <Settings />
             <Link href={"/editProfile"}>Edit Profile</Link>
+     </div>
+          )
+         }
+     
+      </DropdownMenuItem>
+
+       <DropdownMenuItem>
+    
+         {
+          userData?.roles === "Provider"  && (
+            <div className="flex items-center gap-1">
+            <Settings />
+            <Link href={"/providerStats"}>Provider Stats</Link>
      </div>
           )
          }

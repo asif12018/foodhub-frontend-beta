@@ -36,6 +36,22 @@ interface Category{
 }
 
 
+interface ProfileData {
+    id: string;
+    userId: string;
+    RestaurantName: string;
+    address: string | null;
+    city: string | null;
+    isOpen: boolean;
+    openingTime: string | null;
+    closingTime: string | null;
+    ratingAvg: number;
+    ratingCount: number;
+    createdAt: string;
+    updateAt: string;
+}
+
+
 interface foodSingleData {
     id: string;
     provider_id: string;
@@ -43,12 +59,13 @@ interface foodSingleData {
     category?: Category;
     name: string;
     description: string;
-    cusine: string;
+    cuisine: string;
     dietary_tags: string[];
     prepTimeMinutes: number;
     price: number;
     discountPrice?: number;
     imageUrl: string | null;
+    profile?: ProfileData;
     rating?: number;
     reviews?: ReviewData[];
     total_reviews?: number;

@@ -46,4 +46,19 @@ export const profileService = {
       };
     }
   },
+  getProviderProfileById: async(providerId:string)=>{
+        try{
+            const res = await fetch(`${API_URL}/api/profile/provider-profile/${providerId}`,{
+                method:"GET",
+                headers: {
+                    "Content-Type":"application/json",
+                },
+                cache: "no-store"
+            });
+            const data = await res.json();
+            return {data: data , error: null}
+        }catch(err:any){
+            return {data: null , error: {message: err.message || "Something went wrong"}}
+        }
+    }
 };
