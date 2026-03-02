@@ -1,5 +1,14 @@
 
 
+
+interface CustomerProfile {
+    id: string;
+    userId:string;
+    address: string | null;
+    city: string | null;
+}
+
+
 export interface ProfileData {
     id: string;
     name: string;
@@ -9,8 +18,7 @@ export interface ProfileData {
     image: string | null;
     roles: string;
     status: string;
-    city: string | null;
-    address: string | null;
+    customerProfile:CustomerProfile;
     createdAt:string;
     updatedAt:string;
 

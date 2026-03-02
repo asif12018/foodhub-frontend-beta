@@ -16,7 +16,7 @@ export const userService ={
     getSession: async function(){
         try{
             const AUTH_API = env.AUTH_URL;
-            console.log("FETCHING SESSION FROM:", `${AUTH_API}/get-session`);
+            // console.log("FETCHING SESSION FROM:", `${AUTH_API}/get-session`);
             
             const cookieStore = await cookies();
             const res = await fetch(`${AUTH_API}/get-session`, {

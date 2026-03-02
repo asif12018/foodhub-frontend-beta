@@ -72,7 +72,7 @@ export default function TableWithPaginationDemo({
   const handleDelete = async (id: string) => {
     try {
       const res = await deleteMenuAction(id);
-      console.log("this is res from deletemenu", res);
+      // console.log("this is res from deletemenu", res);
       if (res.error) {
         toast.error(res.error.message);
       } else {

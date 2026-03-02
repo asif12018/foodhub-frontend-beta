@@ -10,7 +10,7 @@ export default async function FoodDetailsPage({params}:{params: Promise<{id: str
   const {id} = await params;
 
   const {data, error} = await foodService.getFoodById(id);
-  console.log(data)
+  // console.log(data)
   return (
     <div className='container mx-auto'>
         <ProductDetail1 key={data?.data?.id as string} food={data.data as foodSingleData}></ProductDetail1>

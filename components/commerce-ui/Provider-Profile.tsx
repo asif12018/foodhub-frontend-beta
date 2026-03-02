@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { UserPlus, MessageCircle, User } from "lucide-react";
 
 export default function ProviderProfile({user}:any) {
-    console.log("this is user data", user);
+    // console.log("this is user data", user);
   return (
     <HoverCard>
       

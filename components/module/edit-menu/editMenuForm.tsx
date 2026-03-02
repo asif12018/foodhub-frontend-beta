@@ -89,7 +89,7 @@ export function EditMenuForm() {
 
   const params = useParams();
   const menuId = params.id;
-  console.log(menuId, "this is menuid");
+  // console.log(menuId, "this is menuid");
 
   const form = useForm({
     defaultValues: {

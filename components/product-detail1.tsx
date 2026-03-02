@@ -200,7 +200,7 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
   const [isReviewed, setIsReviewed] = useState(false);
   const [isOrdered, setIsOrdered] = useState(false);
 
-  console.log("this is food", food);
+  // console.log("this is food", food);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -239,7 +239,7 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
       // console.log(error, "this is error")
       if (data?.data?.length !== 0) {
         setIsReviewed(true);
-        console.log(data, "this is review data");
+        // console.log(data, "this is review data");
       }
     };
 
@@ -252,7 +252,7 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
     const fetchFoodData = async () => {
       const { data, error } = await getOrderByMealIdAndUserIdAction(food.id);
       if (data?.data?.length !== 0) {
-        console.log("food data:", data);
+        // console.log("food data:", data);
         setIsOrdered(true);
       }
     };
@@ -300,7 +300,7 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
   });
 
   const onSubmitReview = async (value: z.infer<typeof reviewSchema>) => {
-    console.log("review value", rating, value.comment, food.id);
+    // console.log("review value", rating, value.comment, food.id);
     const { data, error } = await createReviewAction(
       rating,
       value.comment,

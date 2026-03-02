@@ -50,7 +50,7 @@ export function EditCategoryForm() {
     try {
       const res = await editCategoriesAction(categoryId.id as string, data as any);
 
-      console.log("this is res from add category", res.data);
+      // console.log("this is res from add category", res.data);
 
       if(res?.data?.success === false && res?.data?.details.code === "P2002"){
         toast.error("Category already exists");

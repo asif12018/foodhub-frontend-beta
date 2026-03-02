@@ -31,17 +31,17 @@ export function OrderTableComponent() {
       const { data, error } = await getProviderAllOrder();
       setCartData(data);
       setCartError(error);
-      console.log("this is cart data", data);
+      // console.log("this is cart data", data);
     };
     fetchCart();
   }, []);
 
   const handleStatusChange = async (productId: string, status: string) => {
-    console.log("Selected Product ID:", productId);
-    console.log("Selected Status:", status);
+    // console.log("Selected Product ID:", productId);
+    // console.log("Selected Status:", status);
     const { data, error } = await updateOrderStatusAction(productId, status);
-    console.log("this is data", data);
-    console.log("this is error", error);
+    // console.log("this is data", data);
+    // console.log("this is error", error);
     if (data) {
       toast.success("Status updated successfully");
 

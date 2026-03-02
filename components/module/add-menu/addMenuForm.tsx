@@ -77,9 +77,9 @@ export function AddMenuForm() {
     },
     onSubmit: async ({ value }) => {
       try {
-        console.log("this is value", value);
+        // console.log("this is value", value);
         const res = await createMenu(value);
-        console.log("this is res from add menu", res);
+        // console.log("this is res from add menu", res);
 
         if (res.error) {
           toast.error(res.error.message);

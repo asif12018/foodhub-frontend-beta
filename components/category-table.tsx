@@ -64,7 +64,7 @@ export default function CategoryTable({
   const handleDelete = async (id: string) => {
     try {
       const res = await deleteCategoryAction(id);
-      console.log("this is res from deleteCategory", res);
+      // console.log("this is res from deleteCategory", res);
       if (res?.error) {
         toast.error(res.error.message || "Failed to delete category");
       } else {

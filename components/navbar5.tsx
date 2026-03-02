@@ -52,7 +52,7 @@ const Navbar = ({ className }: Navbar5Props) => {
 
   // console.log("this is error from session", error)
 
-  console.log("this is session data", sessionDatas?.user);
+  // console.log("this is session data", sessionDatas?.user);
 
   // Use better-auth's reactive hook! It automatically updates across tabs and after login.
   const {
@@ -93,19 +93,19 @@ const Navbar = ({ className }: Navbar5Props) => {
     <section className={cn("py-4", className)}>
       <div className="container">
         <nav className="flex items-center justify-between">
-          <a
-            href="https://www.shadcnblocks.com"
+          <Link
+            href="/"
             className="flex items-center gap-2"
           >
             <img
-              src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"
-              className="max-h-8"
+              src="https://raw.githubusercontent.com/asif12018/image/main/logo-removebg-preview.png"
+              className="max-h-10"
               alt="Shadcn UI Navbar"
             />
-            <span className="text-lg font-semibold tracking-tighter">
-              Shadcnblocks.com
-            </span>
-          </a>
+            {/* <span className="text-lg font-semibold tracking-tighter">
+              FoodHub
+            </span> */}
+          </Link>
           <NavigationMenu className="hidden lg:block">
             <NavigationMenuList>
               <NavigationMenuItem>

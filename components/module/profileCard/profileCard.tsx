@@ -162,7 +162,7 @@ const SettingsProfile1 = ({
               id="city"
               placeholder="Enter your city"
               disabled
-              defaultValue={profileData?.city || "N/A"}
+              defaultValue={profileData?.customerProfile?.city || "N/A"}
             />
           </div>
           <div className="space-y-2">
@@ -171,7 +171,7 @@ const SettingsProfile1 = ({
               id="address"
               placeholder="Enter your address"
               disabled
-              defaultValue={profileData?.address || "N/A"}
+              defaultValue={profileData?.customerProfile?.address || "N/A"}
             />
           </div>
         </div>

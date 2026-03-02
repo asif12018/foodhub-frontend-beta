@@ -1,5 +1,5 @@
-import { userService } from "@/services/user.service";
 import { NextRequest, NextResponse } from "next/server";
+import { env } from "@/env";
 
 enum UserRoles {
   Admin = "Admin",
@@ -24,14 +24,27 @@ const routeAccessMap: Record<string, UserRoles[]> = {
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const { data } = await userService.getSession();
+
+  let data = null;
+  try {
+    const AUTH_API = env.AUTH_URL;
+    const res = await fetch(`${AUTH_API}/get-session`, {
+      headers: {
+        cookie: request.headers.get("cookie") || "",
+      },
+      cache: "no-store",
+    });
+    data = await res.json();
+  } catch (err) {
+    console.error("Middleware fetch error:", err);
+  }
 
   //if not login then redirect to login page
   if (!data?.user) {
     return NextResponse.redirect(new URL("/signin", request.url));
   }
 
-  const userRole = data?.user?.roles as UserRoles;
+  const userRole = (data?.user as any)?.roles as UserRoles;
   //check route permissions
   for (const route in routeAccessMap) {
     if (pathname.startsWith(route)) {
@@ -55,6 +68,6 @@ export const config = {
     "/add-menu/:path*",
     "/providerStats/:path*",
     "/my-order/:path*",
-    "/allFood/:path*"
+    "/allFood/:path*",
   ],
 };

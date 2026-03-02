@@ -16,15 +16,15 @@ import {
 import { userService } from "@/services/user.service";
 
 export default async function DashboardLayout({
+  children,
   admin,
 }: {
   children: React.ReactNode;
   admin: React.ReactNode;
-  user: React.ReactNode;
 }) {
   const data = await userService.getSession();
   const userInfo = data?.data?.user;
- 
+
   return (
     <SidebarProvider>
       <AppSidebar user={userInfo} />
@@ -37,7 +37,7 @@ export default async function DashboardLayout({
           />
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">
-          {userInfo?.roles === "Admin" && admin}
+          {userInfo?.roles === "Admin" ? admin : children}
         </div>
       </SidebarInset>
     </SidebarProvider>

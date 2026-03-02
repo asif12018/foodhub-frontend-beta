@@ -60,7 +60,7 @@ export const foodService = {
           }
         });
       }
-      console.log("Fetching food with URL:", url.toString());
+      // console.log("Fetching food with URL:", url.toString());
       //function to dynamically tell the server or next js is it will cached or not for srr or issr
       const config: RequestInit = {};
       if (options?.cache) {
@@ -74,12 +74,12 @@ export const foodService = {
       }
       const res = await fetch(url.toString(), config);
       const data = await res.json();
-      console.log(
-        "Fetched data from backend:",
-        data?.data?.data?.length,
-        "items for URL:",
-        url.toString(),
-      );
+      // console.log(
+      //   "Fetched data from backend:",
+      //   data?.data?.data?.length,
+      //   "items for URL:",
+      //   url.toString(),
+      // );
       return { data: data, error: null };
     } catch (err: any) {
       console.error(err);

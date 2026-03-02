@@ -4,7 +4,7 @@ import React from 'react'
 
 export default async function ManageUserPage() {
     const {data, error} = await getAllUserAction();
-    console.log("get all user data", data?.data);
+    // console.log("get all user data", data?.data);
   return (
     <div>
         <DataTable1 data={data?.data} />

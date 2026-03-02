@@ -21,6 +21,29 @@ export default function EditProfilePage() {
     city: "",
   });
 
+  // useEffect(() => {
+  //   const fetchProfile = async () => {
+  //     try {
+  //       const res = await getProfileDataAction();
+  //       console.log("profile data from from", res.data.data);
+  //       if (res?.data?.data) {
+  //         const profile = res.data.data;
+  //         setFormData({
+  //           name: profile?.name || "",
+  //           image: profile?.image || "",
+  //           address: profile?.address || "",
+  //           city: profile?.city || "",
+  //         });
+  //       }
+  //     } catch (error) {
+  //       toast.error("Failed to load profile data");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchProfile();
+  // }, []);
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -28,10 +51,11 @@ export default function EditProfilePage() {
         if (res?.data?.data) {
           const profile = res.data.data;
           setFormData({
-            name: profile.user?.name || "",
-            image: profile.user?.image || "",
-            address: profile.address || "",
-            city: profile.city || "",
+            name: profile?.name || "",
+            // FIX: Drill down into the customerProfile nested object
+            image: profile?.customerProfile?.image || "",
+            address: profile?.customerProfile?.address || "",
+            city: profile?.customerProfile?.city || "",
           });
         }
       } catch (error) {
@@ -42,7 +66,6 @@ export default function EditProfilePage() {
     };
     fetchProfile();
   }, []);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -52,16 +75,19 @@ export default function EditProfilePage() {
     e.preventDefault();
     setSaving(true);
 
-    const payload = {
-      name: {
-        name: formData.name,
-        image: formData.image,
-      },
-      data: {
-        address: formData.address,
-        city: formData.city,
-      },
-    };
+    const payload: any = {};
+    const nameData: any = {};
+    const profileData: any = {};
+
+    if (formData.name?.trim()) nameData.name = formData.name;
+    if (formData.image?.trim()) profileData.image = formData.image;
+    if (formData.address?.trim()) profileData.address = formData.address;
+    if (formData.city?.trim()) profileData.city = formData.city;
+
+    if (Object.keys(nameData).length > 0) payload.name = nameData;
+    if (Object.keys(profileData).length > 0) payload.data = profileData;
+
+    console.log("PAYLOAD BEING SENT:", payload);
 
     try {
       const res = await updateProfileAction(payload);
@@ -109,7 +135,6 @@ export default function EditProfilePage() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Enter your name"
-                required
               />
             </div>
             <div className="space-y-2">

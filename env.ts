@@ -13,6 +13,7 @@ export const env = createEnv({
     NEXT_PUBLIC_API_URL: z.string().url(),
     NEXT_PUBLIC_FRONTEND_URL: z.string().url().optional(),
     NEXT_PUBLIC_TEST: z.string(),
+    NEXT_PUBLIC_BACKEND_URL: z.string().url(),
   },
   runtimeEnv: {
     BACKEND_URL: process.env.BACKEND_URL,
@@ -21,5 +22,6 @@ export const env = createEnv({
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     NEXT_PUBLIC_FRONTEND_URL: process.env.NEXT_PUBLIC_FRONTEND_URL,
     NEXT_PUBLIC_TEST: process.env.NEXT_PUBLIC_TEST,
+    NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
   },
 });
