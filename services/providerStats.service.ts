@@ -28,5 +28,12 @@ export const providerStatsService = {
             return {data: null , error: {message: err.message || "Something went wrong"}}
         }
     },
+    getAllProviders: async () =>{
+        try{
+            const res = await fetch(`${API_URL}/api/providers/`)
+        }catch(err:any){
+
+        }
+    }
     
 }

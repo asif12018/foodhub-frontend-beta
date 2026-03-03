@@ -27,6 +27,7 @@ import { getSession } from "@/server action/auth.action";
 
 import { authClient } from "@/src/app/lib/auth-client";
 import ProfileIcon from "./profileDropDown";
+import Image from "next/image";
 
 interface Navbar5Props {
   className?: string;
@@ -55,11 +56,7 @@ const Navbar = ({ className }: Navbar5Props) => {
   // console.log("this is session data", sessionDatas?.user);
 
   // Use better-auth's reactive hook! It automatically updates across tabs and after login.
-  const {
-    data: sessionData,
-    isPending: loading,
-    refetch,
-  } = authClient.useSession();
+  const { data: sessionData, isPending: loading } = authClient.useSession();
   const session = sessionData?.session;
 
   // console.log("this is session", session)
@@ -72,7 +69,7 @@ const Navbar = ({ className }: Navbar5Props) => {
         fetchOptions: {
           onSuccess: () => {
             toast.success("Signed out successfully", { id: toastId });
-             window.location.reload();
+            window.location.reload();
             // router.push("/");
           },
           onError: (ctx) => {
@@ -93,14 +90,11 @@ const Navbar = ({ className }: Navbar5Props) => {
     <section className={cn("py-4", className)}>
       <div className="container">
         <nav className="flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center gap-2"
-          >
+          <Link href="/" className="flex items-center gap-2">
             <img
               src="https://raw.githubusercontent.com/asif12018/image/main/logo-removebg-preview.png"
               className="max-h-10"
-              alt="Shadcn UI Navbar"
+              alt="Foodhub logo"
             />
             {/* <span className="text-lg font-semibold tracking-tighter">
               FoodHub
@@ -127,6 +121,17 @@ const Navbar = ({ className }: Navbar5Props) => {
                   asChild
                 >
                   <Link href="/allFood"> Menu</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="#"
+                  className={navigationMenuTriggerStyle()}
+                  asChild
+                >
+                  <Link href="/allProvider"> All Provider</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
 
@@ -199,7 +204,7 @@ const Navbar = ({ className }: Navbar5Props) => {
               //   variant="outline"
               // >
               <ProfileIcon
-                sessionData = {sessionDatas}
+                sessionData={sessionDatas}
                 userData={sessionData?.user}
                 onLogout={handleLogout}
                 isLoggingOut={isPending}
@@ -227,16 +232,16 @@ const Navbar = ({ className }: Navbar5Props) => {
               <SheetHeader>
                 <SheetTitle>
                   <a
-                    href="https://www.shadcnblocks.com"
+                    href="/"
                     className="flex items-center gap-2"
                   >
                     <img
-                      src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"
+                      src="https://raw.githubusercontent.com/asif12018/image/main/logo-removebg-preview.png"
                       className="max-h-8"
-                      alt="Shadcn UI Navbar"
+                      alt="Foodhub logo"
                     />
                     <span className="text-lg font-semibold tracking-tighter">
-                      Shadcnblocks.com
+                     
                     </span>
                   </a>
                 </SheetTitle>
@@ -248,6 +253,9 @@ const Navbar = ({ className }: Navbar5Props) => {
                   </Link>
                   <Link href="/allFood" className="font-medium">
                     Menu
+                  </Link>
+                   <Link href="/allProvider" className="font-medium">
+                    All Provider
                   </Link>
                   {sessionDatas?.user?.roles === "Customer" && (
                     <Link href="/cart" className="font-medium">
@@ -271,18 +279,18 @@ const Navbar = ({ className }: Navbar5Props) => {
                     </Link>
                   )}
 
-                   {sessionDatas?.user?.roles === "Admin" && (
+                  {sessionDatas?.user?.roles === "Admin" && (
                     <Link href="/dashboard/adminStats" className="font-medium">
                       Dashboard
                     </Link>
                   )}
-                  
                 </div>
                 <div className="mt-6 flex flex-col gap-4">
                   {loading ? null : session ? (
                     //   {isPending ? "Signing out..." : "Sign out"}
                     // </Button>
                     <ProfileIcon
+                      sessionData={sessionDatas}
                       userData={sessionData?.user}
                       onLogout={handleLogout}
                       isLoggingOut={isPending}

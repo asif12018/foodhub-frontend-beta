@@ -38,6 +38,7 @@ const formSchema = z.object({
     .union([z.number().min(0, "Discount price must be at least 0"), z.nan()])
     .optional(),
   prepTimeMinutes: z.number().min(1, "Preparation minutes must be at least 1"),
+  imageUrl: z.string().min(1, "image linke require").optional(),
   dietary_tags: z.array(z.string()).min(1, "Dietary tags must be at least 1"),
 });
 
@@ -70,6 +71,7 @@ export function AddMenuForm() {
       price: "" as unknown as number,
       discountPrice: undefined,
       prepTimeMinutes: "" as unknown as number,
+      imageUrl: "",
       dietary_tags: [] as string[],
     } as z.infer<typeof formSchema>,
     validators: {
@@ -78,7 +80,17 @@ export function AddMenuForm() {
     onSubmit: async ({ value }) => {
       try {
         // console.log("this is value", value);
-        const res = await createMenu(value);
+        const payload: any = { ...value };
+        if (payload.category_id) {
+          const selectedCategory = categories.find(
+            (c: any) => (c.id || c._id) === payload.category_id,
+          );
+          if (selectedCategory) {
+            payload.cuisine = selectedCategory.name || selectedCategory.title;
+          }
+        }
+
+        const res = await createMenu(payload);
         // console.log("this is res from add menu", res);
 
         if (res.error) {
@@ -323,6 +335,33 @@ export function AddMenuForm() {
                         rows={3}
                         className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 resize-none"
                         aria-invalid={isInvalid}
+                      />
+                      {isInvalid && (
+                        <FieldError errors={field.state.meta.errors} />
+                      )}
+                    </Field>
+                  );
+                }}
+              />
+
+              <form.Field
+                name="imageUrl"
+                children={(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid;
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>
+                        Image URL (Optional)
+                      </FieldLabel>
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        aria-invalid={isInvalid}
+                        placeholder="https://example.com/image.jpg"
                       />
                       {isInvalid && (
                         <FieldError errors={field.state.meta.errors} />

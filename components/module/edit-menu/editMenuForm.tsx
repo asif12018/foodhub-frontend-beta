@@ -64,6 +64,13 @@ const formSchema = z.object({
     z.undefined(),
   ]),
   dietary_tags: z.union([z.array(z.string()), z.undefined()]),
+  imageUrl: z
+    .union([
+      z.string().url("Must be a valid URL"),
+      z.literal(""),
+      z.undefined(),
+    ])
+    .transform((v) => (v === "" ? undefined : v)),
 });
 
 const DIETARY_TAGS = ["HALAL", "VEG", "KETO", "GLUTEN_FREE", "DAIRY_FREE"];
@@ -100,6 +107,7 @@ export function EditMenuForm() {
       discountPrice: undefined as number | undefined,
       prepTimeMinutes: undefined as number | undefined,
       dietary_tags: [] as string[] | undefined,
+      imageUrl: undefined as string | undefined,
     },
     validators: {
       onSubmit: formSchema,
@@ -107,12 +115,21 @@ export function EditMenuForm() {
     onSubmit: async ({ value }) => {
       try {
         // Filter out any undefined or empty array properties for the PATCH request
-        const patchData = Object.fromEntries(
+        const patchData: any = Object.fromEntries(
           Object.entries(value).filter(
             ([_, v]) =>
               v !== undefined && !(Array.isArray(v) && v.length === 0),
           ),
         );
+
+        if (patchData.category_id) {
+          const selectedCategory = categories.find(
+            (c: any) => (c.id || c._id) === patchData.category_id,
+          );
+          if (selectedCategory) {
+            patchData.cuisine = selectedCategory.name || selectedCategory.title;
+          }
+        }
 
         // await updateMenu(menuId, patchData); // Replace with actual PATCH action
 
@@ -123,7 +140,6 @@ export function EditMenuForm() {
           toast.success("Menu updated successfully");
           router.push("/");
         }
-
       } catch (err: any) {
         toast.error("Failed to update menu: " + err.message);
       }
@@ -360,6 +376,31 @@ export function EditMenuForm() {
                         placeholder="Fresh prawns grilled with garlic and spices."
                         rows={3}
                         className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                        aria-invalid={isInvalid}
+                      />
+                      {isInvalid && (
+                        <FieldError errors={field.state.meta.errors} />
+                      )}
+                    </Field>
+                  );
+                }}
+              />
+
+              <form.Field
+                name="imageUrl"
+                children={(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid;
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>Image URL</FieldLabel>
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value || ""}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder="https://example.com/image.jpg"
                         aria-invalid={isInvalid}
                       />
                       {isInvalid && (

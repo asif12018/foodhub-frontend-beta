@@ -84,7 +84,8 @@ export function TableComponent() {
           <TableHead>Status</TableHead>
           <TableHead>Action</TableHead>
           <TableHead className="text-center">Quantity</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
+          <TableHead className="text-right">Regular Price</TableHead>
+          <TableHead className="text-right">Total Price After Discount + Tax</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -105,6 +106,7 @@ export function TableComponent() {
             </TableCell>
             <TableCell className="text-center">{invoice.quantity}</TableCell>
             <TableCell className="text-right">{invoice.price}tk</TableCell>
+            <TableCell className="text-right">{invoice.totalPrice}tk</TableCell>
           </TableRow>
         ))}
       </TableBody>

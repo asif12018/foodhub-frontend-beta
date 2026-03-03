@@ -25,7 +25,7 @@ const ProfileIcon = ({
   onLogout,
   isLoggingOut,
   userData,
-  sessionData
+  sessionData,
 }: ProfileIconProps) => (
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
@@ -33,7 +33,11 @@ const ProfileIcon = ({
         <Avatar>
           <AvatarImage
             alt="profile image"
-            src={userData?.image || "https://github.com/shadcn.png"}
+            src={
+              sessionData?.user?.image ||
+              userData?.image ||
+              "https://github.com/shadcn.png"
+            }
           />
           <AvatarFallback>HB</AvatarFallback>
         </Avatar>
@@ -46,16 +50,20 @@ const ProfileIcon = ({
           <Avatar className="h-12 w-12">
             <AvatarImage
               alt="@haydenbleasel"
-              src="https://github.com/shadcn.png"
+              src={
+                sessionData?.user?.image ||
+                userData?.image ||
+                "https://github.com/shadcn.png"
+              }
             />
             <AvatarFallback>HB</AvatarFallback>
           </Avatar>
           <div className="flex flex-col space-y-1">
             <p className="font-medium text-sm leading-none">
-              {userData?.name}
+              {sessionData?.user?.name || userData?.name}
             </p>
             <p className="text-muted-foreground text-xs leading-none">
-              {userData?.email}
+              {sessionData?.user?.email || userData?.email}
             </p>
             <Badge className="w-fit text-xs" variant="secondary">
               Pro
@@ -65,43 +73,35 @@ const ProfileIcon = ({
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuItem>
-        {
-          userData?.roles === "Customer"  ? (
-            <>
-            <Link href="/profile" className="flex items-center gap-2"><User />
-        View Profile</Link>
-            </>
-          ) : null
-        }
+        {userData?.roles === "Customer" ? (
+          <>
+            <Link href="/profile" className="flex items-center gap-2">
+              <User />
+              View Profile
+            </Link>
+          </>
+        ) : null}
       </DropdownMenuItem>
       {/* <DropdownMenuItem>
         <CreditCard />
         Billing
       </DropdownMenuItem> */}
       <DropdownMenuItem>
-    
-         {
-          userData?.roles === "Customer"  && (
-            <div className="flex items-center gap-1">
+        {userData?.roles === "Customer" && (
+          <div className="flex items-center gap-1">
             <Settings />
             <Link href={"/editProfile"}>Edit Profile</Link>
-     </div>
-          )
-         }
-     
+          </div>
+        )}
       </DropdownMenuItem>
 
-       <DropdownMenuItem>
-    
-         {
-          userData?.roles === "Provider"  && (
-            <div className="flex items-center gap-1">
+      <DropdownMenuItem>
+        {userData?.roles === "Provider" && (
+          <div className="flex items-center gap-1">
             <Settings />
             <Link href={"/providerStats"}>Provider Stats</Link>
-     </div>
-          )
-         }
-     
+          </div>
+        )}
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem variant="destructive" onClick={onLogout}>

@@ -13,6 +13,8 @@ export default async function ProviderDetailsPage({
 
   const { data, error } = await getProviderProfileByIdAction(id);
 
+
+
   if (error || !data?.data) {
     return (
       <div className="container mx-auto py-10 text-center">

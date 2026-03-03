@@ -109,7 +109,7 @@ export default async function AllFood({
                   currency: "BDT",
                 },
                 image: {
-                  src: food.image?.[0] || "https://placehold.co/600x400",
+                  src: food.imageUrl || "https://placehold.co/600x400",
                   alt: food.name,
                 },
                 cuisine: food.cuisine,

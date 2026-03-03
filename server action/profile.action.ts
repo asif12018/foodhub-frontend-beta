@@ -21,3 +21,7 @@ export const getProviderProfileByIdAction = async (providerId:string)=>{
 }
 
 
+export const getAllProviderAction = async()=>{
+  const result = await profileService.getAllProvider();
+  return result;
+}

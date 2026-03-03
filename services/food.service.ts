@@ -27,7 +27,7 @@ export interface Food {
   description: string;
   price: number;
   discountPrice?: number;
-  image?: string[];
+  imageUrl?: string;
   cuisine: string;
   dietary_tags: string[];
   prepTimeMinutes: number;
