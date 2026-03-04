@@ -17,6 +17,9 @@ import {
   updateOrderStatusAction,
 } from "@/server action/order.action";
 import { toast } from "sonner";
+import { getUserProfileStatusAutoAction } from "@/server action/userProfileStatusAction";
+import { GooeyToaster, gooeyToast } from 'goey-toast';
+import 'goey-toast/styles.css';
 
 
 
@@ -25,10 +28,17 @@ export function OrderTableComponent() {
   const [cartError, setCartError] = useState<any>(null);
   const [status, setStatus] = useState("PREPARING");
   const [productId, setProductId] = useState("");
+  const [userStatus, setUserStatus] = useState<any>(null);
 
   useEffect(() => {
     const fetchCart = async () => {
+      //loadin user status
+      const userActiondata = await getUserProfileStatusAutoAction();
+      setUserStatus(userActiondata?.data);
       const { data, error } = await getProviderAllOrder();
+      if(error){
+        toast.error(error.message || "Failed to fetch orders");
+      }
       setCartData(data);
       setCartError(error);
       // console.log("this is cart data", data);
@@ -37,6 +47,15 @@ export function OrderTableComponent() {
   }, []);
 
   const handleStatusChange = async (productId: string, status: string) => {
+    //checking it the user is suspended or not
+    if (userStatus?.data?.status === "suspend") {
+      gooeyToast.error("Account Suspension notice!!", {
+        description:
+          "Your account has been suspended for violating our terms and conditions. If you think that it was a mistake please contact customer support",
+        preset: "smooth",
+      });
+      return;
+    }
     // console.log("Selected Product ID:", productId);
     // console.log("Selected Status:", status);
     const { data, error } = await updateOrderStatusAction(productId, status);
@@ -64,7 +83,10 @@ export function OrderTableComponent() {
 
   // console.log("this is cart data", cartData?.data);
   return (
-    <Table>
+    <div>
+           <GooeyToaster position="top-center" />
+      <Table>
+   
       <TableCaption>A list of your recent invoices.</TableCaption>
       <TableHeader>
         <TableRow>
@@ -118,5 +140,6 @@ export function OrderTableComponent() {
         ))}
       </TableBody>
     </Table>
+    </div>
   );
 }

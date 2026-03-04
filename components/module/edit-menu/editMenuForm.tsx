@@ -26,6 +26,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { getAllCategory } from "@/server action/category.action";
 import { createMenu, updateMenuAction } from "@/server action/food.action";
+import { GooeyToaster, gooeyToast } from "goey-toast";
+import "goey-toast/styles.css";
+import { getUserProfileStatusAutoAction } from "@/server action/userProfileStatusAction";
 
 const formSchema = z.object({
   category_id: z
@@ -77,15 +80,19 @@ const DIETARY_TAGS = ["HALAL", "VEG", "KETO", "GLUTEN_FREE", "DAIRY_FREE"];
 
 export function EditMenuForm() {
   const [categories, setCategories] = React.useState<any[]>([]);
+  const [userStatus, setUserStatus] = React.useState<any>(null);
 
   React.useEffect(() => {
     async function fetchCategories() {
       try {
+        const userActiondata = await getUserProfileStatusAutoAction();
+        setUserStatus(userActiondata.data);
         const res = await getAllCategory();
         // Assuming res has a data property or is the array itself
         const categoryData = Array.isArray(res) ? res : res?.data?.data || [];
         setCategories(categoryData);
-      } catch (error) {
+      } catch (error: any) {
+        toast.error(error.message || "Failed to fetch categories");
         console.error("Failed to fetch categories:", error);
       }
     }
@@ -114,6 +121,15 @@ export function EditMenuForm() {
     },
     onSubmit: async ({ value }) => {
       try {
+        //checking it the user is suspended or not
+        if (userStatus?.data?.status === "suspend") {
+          gooeyToast.error("Account Suspension notice!!", {
+            description:
+              "Your account has been suspended for violating our terms and conditions. If you think that it was a mistake please contact customer support",
+            preset: "smooth",
+          });
+          return;
+        }
         // Filter out any undefined or empty array properties for the PATCH request
         const patchData: any = Object.fromEntries(
           Object.entries(value).filter(
@@ -148,6 +164,7 @@ export function EditMenuForm() {
 
   return (
     <div className="flex items-center justify-center p-4">
+      <GooeyToaster position="top-center" />
       <Card className="w-full max-w-2xl">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">

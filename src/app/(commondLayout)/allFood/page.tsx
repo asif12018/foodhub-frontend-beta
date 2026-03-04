@@ -14,6 +14,7 @@ import { CuisineFilter } from "@/components/cuisine-filter";
 import CheckboxDiateryPreference from "@/components/dietary-filter";
 import { Slider } from "@/components/ui/slider";
 import { SliderControlled } from "@/components/module/get all food/slider";
+import { toast } from "sonner";
 
 export default async function AllFood({
   searchParams,
@@ -50,6 +51,10 @@ export default async function AllFood({
       cache: "no-store",
     },
   );
+
+  if(error){
+    toast.error( "Failed to fetch food");
+  }
 
   //min max price
 

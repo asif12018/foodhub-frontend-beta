@@ -14,6 +14,7 @@ import { getMyCart } from "@/server action/cart.action";
 import { cartService } from "@/services/cart.service";
 import Link from "next/link";
 import { Button } from "./button";
+import { toast } from "sonner";
 
 const invoices = [
   {
@@ -69,6 +70,9 @@ export function TableComponent() {
       const { data, error } = await getMyCart();
       setCartData(data);
       setCartError(error);
+      if(error){
+        toast.error("Failed to fetch cart");
+      }
     };
     fetchCart();
   }, []);

@@ -41,6 +41,9 @@ import {
 } from "@/server action/review.action";
 import { createOrder } from "@/server action/order.action";
 import Link from "next/link";
+import { getUserProfileStatusAutoAction } from "@/server action/userProfileStatusAction";
+import { GooeyToaster, gooeyToast } from "goey-toast";
+import "goey-toast/styles.css";
 type StockStatusCode = "IN_STOCK" | "OUT_OF_STOCK";
 
 interface StockInfo {
@@ -199,11 +202,16 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
 
   const [isReviewed, setIsReviewed] = useState(false);
   const [isOrdered, setIsOrdered] = useState(false);
+  const [userStatus, setUserStatus] = useState<any>(null);
 
   // console.log("this is food", food);
 
   useEffect(() => {
     const fetchSession = async () => {
+      //gettting user status
+      const { data: userStatus, error: userStatusError } =
+        await getUserProfileStatusAutoAction();
+      setUserStatus(userStatus);
       const { data, error } = await getSession();
       setSessionData(data);
     };
@@ -264,18 +272,27 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
   //create order
 
   const handleCreateOrder = async () => {
+    //blocking user if he is suspended before creating a order
+    if (userStatus?.data?.status === "suspend") {
+      gooeyToast.error("Account Suspension notice!!", {
+        description:
+          "Your account has been suspended for violating our terms and conditions. If you think that it was a mistake, please contact customer support",
+        preset: "smooth",
+      });
+      return;
+    }
     // const { data, error } = await orderService.createOrder(food.id, quantity);
-    const {data, error} = await createOrder(food.id, quantity);
+    const { data, error } = await createOrder(food.id, quantity);
     if (data?.success) {
       toast.success(data.message);
       redirect("/");
     } else if (data && !data.success) {
-      toast.error(data.message || "Failed to add to cart");
+      toast.error( "Failed to add to cart");
     }
 
     console.log(error);
     if (error) {
-      toast.error(error.message || "An error occurred");
+      toast.error("An error occurred");
     }
   };
 
@@ -323,6 +340,7 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
   return (
     <section className={cn("py-32", className)}>
       <div className="container">
+        <GooeyToaster position="top-center" />
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
           <div>
             <ProductImages
@@ -374,9 +392,22 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
               <p>Cuisine: {food?.cuisine}</p>
               <div>
                 <p>Restaurant Name: {food?.profile?.RestaurantName}</p>
-                <Link href={`/provider/${food?.profile?.id}`} className="text-blue-500">View Provider Profile</Link>
+                <Link
+                  href={`/provider/${food?.profile?.id}`}
+                  className="text-blue-500"
+                >
+                  View Provider Profile
+                </Link>
               </div>
             </div>
+
+            {
+              (sessionData?.user?.roles === "Provider" || sessionData?.user?.roles === "Admin") && (<div className="bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400 p-4 rounded-lg text-sm border border-red-100 dark:border-red-900">
+                    Only Customer can order food from here!!!!
+                  </div>)
+            }
+
+            {/*=======   quantity section start from here  =======*/}
 
             <div className="container mx-auto">
               <p className="text-center font-bold my-1">Quantity</p>
@@ -464,41 +495,57 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
             )} */}
 
             {/* Repling  existing review section with this logic if not work then i will use it above one*/}
-{sessionData?.user?.roles === "Customer" && (
-                <div className="mb-8">
-                  {!isOrdered ? (
-                    <div className="bg-muted p-4 rounded-lg text-sm">
-                      Only customers who have purchased this meal can leave a review.
+            {sessionData?.user?.roles === "Customer" && (
+              <div className="mb-8">
+                {!isOrdered ? (
+                  <div className="bg-muted p-4 rounded-lg text-sm">
+                    Only customers who have purchased this meal can leave a
+                    review.
+                  </div>
+                ) : isReviewed ? (
+                  <div className="bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400 p-4 rounded-lg text-sm border border-green-100 dark:border-green-900">
+                    You have already shared your thoughts on this meal. Thank
+                    you!
+                  </div>
+                ) : (
+                  <div className="space-y-4 bg-accent/30 p-4 rounded-xl">
+                    <p className="font-medium">Rate your experience</p>
+                    <div className="flex items-center gap-4">
+                      <StarRating_Basic
+                        value={rating}
+                        onChange={setRating}
+                        maxStars={5}
+                      />
+                      <span className="font-bold text-lg">{rating} / 5</span>
                     </div>
-                  ) : isReviewed ? (
-                    <div className="bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400 p-4 rounded-lg text-sm border border-green-100 dark:border-green-900">
-                      You have already shared your thoughts on this meal. Thank you!
-                    </div>
-                  ) : (
-                    <div className="space-y-4 bg-accent/30 p-4 rounded-xl">
-                      <p className="font-medium">Rate your experience</p>
-                      <div className="flex items-center gap-4">
-                        <StarRating_Basic value={rating} onChange={setRating} maxStars={5} />
-                        <span className="font-bold text-lg">{rating} / 5</span>
-                      </div>
-                      <form onSubmit={form.handleSubmit(onSubmitReview)} className="space-y-4">
-                        <Controller
-                          control={form.control}
-                          name="comment"
-                          render={({ field, fieldState }) => (
-                            <UIField>
-                              <FieldLabel>Your Review</FieldLabel>
-                              <Input {...field} placeholder="How was the taste?" />
-                              {fieldState.error && <FieldError errors={[{ message: fieldState.error.message }]} />}
-                            </UIField>
-                          )}
-                        />
-                        <Button type="submit">Submit Review</Button>
-                      </form>
-                    </div>
-                  )}
-                </div>
-              )}
+                    <form
+                      onSubmit={form.handleSubmit(onSubmitReview)}
+                      className="space-y-4"
+                    >
+                      <Controller
+                        control={form.control}
+                        name="comment"
+                        render={({ field, fieldState }) => (
+                          <UIField>
+                            <FieldLabel>Your Review</FieldLabel>
+                            <Input
+                              {...field}
+                              placeholder="How was the taste?"
+                            />
+                            {fieldState.error && (
+                              <FieldError
+                                errors={[{ message: fieldState.error.message }]}
+                              />
+                            )}
+                          </UIField>
+                        )}
+                      />
+                      <Button type="submit">Submit Review</Button>
+                    </form>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div>
               {food?.reviews?.map((review) => (

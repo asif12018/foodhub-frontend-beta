@@ -4,12 +4,16 @@
 import { ProductDetail1 } from '@/components/product-detail1'
 import { foodService } from '@/services/food.service';
 import foodSingleData from '@/src/constants/food.types';
+import { toast } from 'sonner';
 
 
 export default async function FoodDetailsPage({params}:{params: Promise<{id: string}>}) {
   const {id} = await params;
 
   const {data, error} = await foodService.getFoodById(id);
+  if(error){
+    toast.error( "Failed to fetch food");
+  }
   // console.log(data)
   return (
     <div className='container mx-auto'>

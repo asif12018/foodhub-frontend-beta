@@ -10,6 +10,8 @@ import { createCategoryAction, editCategoriesAction } from "@/server action/admi
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { GooeyToaster, gooeyToast } from 'goey-toast'
+import 'goey-toast/styles.css'
 import {
   Card,
   CardContent,
@@ -58,9 +60,13 @@ export function EditCategoryForm() {
       }
 
       if (res?.error) {
-        toast.error(res.error.message || "Failed to create category");
+       gooeyToast.error('Category update failed !!!', {
+  preset: 'smooth',
+})
       } else {
-        toast.success("Category created successfully!");
+        gooeyToast.success('Category Updated Successfull !!!', {
+  preset: 'smooth',
+})
         reset();
         router.push("/dashboard/manageCategories");
         router.refresh();
@@ -74,6 +80,7 @@ export function EditCategoryForm() {
 
   return (
     <div className="flex h-[80vh] w-full items-center justify-center p-4">
+      <GooeyToaster position="top-center" />
       <Card className="mx-auto w-full max-w-md shadow-lg border-muted/60">
         <CardHeader className="space-y-2 text-center">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">

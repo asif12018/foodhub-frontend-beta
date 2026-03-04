@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 
 export function ProviderCard({provider}:any) {
-  console.log("this is provider data", provider)
+  // console.log("this is provider data", provider)
   return (
     <Card className="mx-auto w-full ">
       <CardHeader>

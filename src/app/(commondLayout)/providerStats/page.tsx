@@ -1,9 +1,11 @@
 import ProviderStats from '@/components/module/stats-section/providerStats';
 import { getProviderStatsAction } from '@/server action/providerStats.action'
 import React from 'react'
+import { toast } from 'sonner';
 
 export default async function ProviderStatsPage() {
     const {data, error} = await getProviderStatsAction();
+   
     // console.log('this is provider stats', data);
   return (
     <div>

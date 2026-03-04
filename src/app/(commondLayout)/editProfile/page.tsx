@@ -10,8 +10,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { GooeyToaster, gooeyToast } from "goey-toast";
+import "goey-toast/styles.css";
 
 export default function EditProfilePage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -87,14 +91,20 @@ export default function EditProfilePage() {
     if (Object.keys(nameData).length > 0) payload.name = nameData;
     if (Object.keys(profileData).length > 0) payload.data = profileData;
 
-    console.log("PAYLOAD BEING SENT:", payload);
+    // console.log("PAYLOAD BEING SENT:", payload);
 
     try {
       const res = await updateProfileAction(payload);
-      if (res.error) {
+      // console.log("res error", res.error);
+      if (res?.error) {
         toast.error(res.error.message || "Failed to update profile");
-      } else {
-        toast.success("Profile updated successfully");
+      }
+
+      if (res?.data?.success) {
+        gooeyToast.success("Profile Updated Successfull !!!", {
+          preset: "smooth",
+        });
+        router.push("/profile");
       }
     } catch (error) {
       toast.error("An error occurred while updating the profile");
@@ -113,6 +123,7 @@ export default function EditProfilePage() {
 
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-8">
+      <GooeyToaster position="top-center" />
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Edit Profile</h1>
         <p className="text-muted-foreground mt-2">

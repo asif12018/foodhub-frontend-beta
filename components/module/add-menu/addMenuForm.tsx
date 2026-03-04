@@ -5,6 +5,7 @@ import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
+import "goey-toast/styles.css";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +27,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { getAllCategory } from "@/server action/category.action";
 import { createMenu } from "@/server action/food.action";
+import { getUserProfileStatusAutoAction } from "@/server action/userProfileStatusAction";
+import { GooeyToaster, gooeyToast } from "goey-toast";
 
 const formSchema = z.object({
   category_id: z.string().min(1, "Category is required"),
@@ -38,7 +41,7 @@ const formSchema = z.object({
     .union([z.number().min(0, "Discount price must be at least 0"), z.nan()])
     .optional(),
   prepTimeMinutes: z.number().min(1, "Preparation minutes must be at least 1"),
-  imageUrl: z.string().min(1, "image linke require").optional(),
+  imageUrl: z.string().optional(),
   dietary_tags: z.array(z.string()).min(1, "Dietary tags must be at least 1"),
 });
 
@@ -46,15 +49,20 @@ const DIETARY_TAGS = ["HALAL", "VEG", "KETO", "GLUTEN_FREE", "DAIRY_FREE"];
 
 export function AddMenuForm() {
   const [categories, setCategories] = React.useState<any[]>([]);
+  const [userStatus, setUserStatus] = React.useState<any>(null);
 
   React.useEffect(() => {
     async function fetchCategories() {
       try {
+        const { data: userStatus, error } =
+          await getUserProfileStatusAutoAction();
+        setUserStatus(userStatus);
         const res = await getAllCategory();
         // Assuming res has a data property or is the array itself
         const categoryData = Array.isArray(res) ? res : res?.data?.data || [];
         setCategories(categoryData);
-      } catch (error) {
+      } catch (error: any) {
+        toast.error("Failed to fetch categories");
         console.error("Failed to fetch categories:", error);
       }
     }
@@ -79,6 +87,16 @@ export function AddMenuForm() {
     },
     onSubmit: async ({ value }) => {
       try {
+        //check is user is suspended or not
+        console.log("data console", userStatus?.data?.status);
+        if (userStatus?.data?.status === "suspend") {
+          gooeyToast.error("Your account has been banned", {
+            description:
+              "For violating our terms and conditions your account has been suspended. If you think that this happened accidently, please contact use",
+            preset: "smooth",
+          });
+          return;
+        }
         // console.log("this is value", value);
         const payload: any = { ...value };
         if (payload.category_id) {
@@ -101,6 +119,7 @@ export function AddMenuForm() {
           window.location.href = "/";
         }
       } catch (err: any) {
+        toast.error("something went wrong on server");
         toast.error("Failed to add menu", err.message);
       }
     },
@@ -109,6 +128,7 @@ export function AddMenuForm() {
   return (
     <div className="flex items-center justify-center p-4">
       <Card className="w-full max-w-2xl">
+        <GooeyToaster position="top-center" />
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
             Add Menu

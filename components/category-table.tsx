@@ -11,10 +11,15 @@ import {
 import foodSingleData from "@/src/constants/food.types";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { deleteCategoryAction, restoreDeletedCategory } from "@/server action/admin.action";
+import {
+  deleteCategoryAction,
+  restoreDeletedCategory,
+} from "@/server action/admin.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { CategorySingleData } from "@/src/constants/category.types";
+import { GooeyToaster, gooeyToast } from "goey-toast";
+import "goey-toast/styles.css";
 
 const products = [
   {
@@ -66,34 +71,47 @@ export default function CategoryTable({
       const res = await deleteCategoryAction(id);
       // console.log("this is res from deleteCategory", res);
       if (res?.error) {
-        toast.error(res.error.message || "Failed to delete category");
+        gooeyToast.error('Failed to delete category !!!', {
+  preset: 'smooth',
+})
       } else {
-        toast.success("Category deleted successfully");
+        gooeyToast.success('category deleted successfully!!!', {
+  preset: 'smooth',
+})
         router.refresh();
       }
     } catch (err: any) {
-      toast.error(err.message || "Something went wrong");
+     gooeyToast.error('Something went wrong !!!', {
+  preset: 'smooth',
+})
     }
   };
 
   //restore deleted category
-  const handleRestoreCategory = async(id: string)=>{
-    try{
+  const handleRestoreCategory = async (id: string) => {
+    try {
       const res = await restoreDeletedCategory(id);
-      console.log("this is res from restoreDeletedCategory", res);
+      // console.log("this is res from restoreDeletedCategory", res);
       if (res?.error) {
-        toast.error(res.error.message || "Failed to restore category");
+       gooeyToast.error('Failed to restore category !!!', {
+  preset: 'smooth',
+})
       } else {
-        toast.success("Category restored successfully");
+        gooeyToast.success("Category restore successfully !!!", {
+          preset: "smooth",
+        });
         router.refresh();
       }
-    }catch(err:any){
-      toast.error(err.message || "Something went wrong");
+    } catch (err: any) {
+      gooeyToast.error('Something went wrong !!!', {
+  preset: 'smooth',
+})
     }
-  }
+  };
 
   return (
     <div className="w-full">
+      <GooeyToaster position="top-center" />
       <div className="w-full overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
@@ -122,7 +140,9 @@ export default function CategoryTable({
                 <TableCell>{product?.isDeleted ? "true" : "false"}</TableCell>
                 <TableCell>
                   <Button>
-                    <Link href={`/dashboard/manageCategories/${product?.id}`}>Edit</Link>
+                    <Link href={`/dashboard/manageCategories/${product?.id}`}>
+                      Edit
+                    </Link>
                   </Button>
                 </TableCell>
                 <TableCell>
@@ -133,23 +153,21 @@ export default function CategoryTable({
                   >
                     {product?.isDeleted ? "you already deleted it" : "Delete"}
                   </Button> */}
-                  {
-                    product?.isDeleted ? (
-                      <Button
-                        onClick={() => handleRestoreCategory(product.id)}
-                        className="bg-green-500"
-                      >
-                        Restore
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() => handleDelete(product.id)}
-                        className="bg-red-500"
-                      >
-                        Delete
-                      </Button>
-                    )
-                  }
+                  {product?.isDeleted ? (
+                    <Button
+                      onClick={() => handleRestoreCategory(product.id)}
+                      className="bg-green-500"
+                    >
+                      Restore
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => handleDelete(product.id)}
+                      className="bg-red-500"
+                    >
+                      Delete
+                    </Button>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

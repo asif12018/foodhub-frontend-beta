@@ -142,6 +142,9 @@ const RegisterForm = ({
         } as any);
 
         if (error) {
+          if(error){
+            toast.error(error.message || "Failed to register");
+          }
           // 2. Check for the specific email conflict error
           if (error.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {
             formApi.setFieldMeta("email", (prev) => ({

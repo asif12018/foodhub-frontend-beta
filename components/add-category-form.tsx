@@ -10,6 +10,8 @@ import { createCategoryAction } from "@/server action/admin.action";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { GooeyToaster, gooeyToast } from "goey-toast";
+import "goey-toast/styles.css";
 import {
   Card,
   CardContent,
@@ -50,15 +52,21 @@ export function AddCategoryForm() {
 
       // console.log("this is res from add category", res.data);
 
-      if(res?.data?.success === false && res?.data?.details.code === "P2002"){
-        toast.error("Category already exists");
+      if (res?.data?.success === false && res?.data?.details.code === "P2002") {
+        gooeyToast.error("Category Already exist !!!", {
+          preset: "smooth",
+        });
         return;
       }
 
       if (res?.error) {
-        toast.error(res.error.message || "Failed to create category");
+        gooeyToast.error("Failed to create category !!!", {
+          preset: "smooth",
+        });
       } else {
-        toast.success("Category created successfully!");
+        gooeyToast.success("Category Created Successfull !!!", {
+          preset: "smooth",
+        });
         reset();
         router.push("/dashboard/manageCategories");
         router.refresh();
@@ -72,6 +80,7 @@ export function AddCategoryForm() {
 
   return (
     <div className="flex h-[80vh] w-full items-center justify-center p-4">
+      <GooeyToaster position="top-center" />
       <Card className="mx-auto w-full max-w-md shadow-lg border-muted/60">
         <CardHeader className="space-y-2 text-center">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">

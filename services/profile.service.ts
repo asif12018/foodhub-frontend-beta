@@ -46,34 +46,46 @@ export const profileService = {
       };
     }
   },
-  getAllProvider: async()=>{
-      try{
-        const res = await fetch(`${API_URL}/api/profile/provider-profile/allProvider`,{
-          method:"GET",
+  getAllProvider: async () => {
+    try {
+      const res = await fetch(
+        `${API_URL}/api/profile/provider-profile/allProvider`,
+        {
+          method: "GET",
           headers: {
-            "Content-Type":"application/json",
+            "Content-Type": "application/json",
           },
-          cache: "no-store"
-        });
-        const data = await res.json();
-        return {data: data , error: null}
-      }catch(err:any){
-        return {data: null , error: {message: err.message || "Something went wrong"}}
-      }
-  },
-  getProviderProfileById: async(providerId:string)=>{
-        try{
-            const res = await fetch(`${API_URL}/api/profile/provider-profile/allProvider/${providerId}`,{
-                method:"GET",
-                headers: {
-                    "Content-Type":"application/json",
-                },
-                cache: "no-store"
-            });
-            const data = await res.json();
-            return {data: data , error: null}
-        }catch(err:any){
-            return {data: null , error: {message: err.message || "Something went wrong"}}
-        }
+          cache: "no-store",
+        },
+      );
+      const data = await res.json();
+      return { data: data, error: null };
+    } catch (err: any) {
+      return {
+        data: null,
+        error: { message: err.message || "Something went wrong" },
+      };
     }
+  },
+  getProviderProfileById: async (providerId: string) => {
+    try {
+      const res = await fetch(
+        `${API_URL}/api/profile/provider-profile/allProvider/${providerId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          cache: "no-store",
+        },
+      );
+      const data = await res.json();
+      return { data: data, error: null };
+    } catch (err: any) {
+      return {
+        data: null,
+        error: { message: err.message || "Something went wrong" },
+      };
+    }
+  },
 };

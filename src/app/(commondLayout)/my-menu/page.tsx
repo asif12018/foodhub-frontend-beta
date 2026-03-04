@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/pagination";
 import { getMyMenu } from "@/server action/food.action";
 import React from "react";
+import { toast } from "sonner";
 
 export default async function MyMenuPage({
   searchParams,
@@ -21,6 +22,10 @@ export default async function MyMenuPage({
   const resolvedParams = await searchParams;
   const currentPage = Number(resolvedParams.page) || 1;
   const { data, error } = await getMyMenu({ page: currentPage });
+
+  if(error){
+    toast.error("Failed to fetch menu");
+  }
 
   //pagination code
 

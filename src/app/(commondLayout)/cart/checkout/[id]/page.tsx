@@ -45,7 +45,7 @@ export default function CheckOutDetailsPage() {
 
 
         if (error) {
-          toast.error(error.message, { id: toastId });
+          toast.error("Something went wrong", { id: toastId });
           return;
         }
         toast.success("Checkout successful", { id: toastId });

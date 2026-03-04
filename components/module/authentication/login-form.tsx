@@ -2,6 +2,7 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import * as z from "zod";
+import "goey-toast/styles.css";
 import {
   Card,
   CardContent,
@@ -16,12 +17,14 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
+import { GooeyToaster, gooeyToast } from "goey-toast";
 import { Input } from "@/components/ui/input";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import { authClient } from "@/src/app/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { getUserProfileStatusAction } from "@/server action/userProfileStatusAction";
 
 //from schema
 const loginSchema = z.object({
@@ -44,11 +47,23 @@ export function LoginForm({
       onSubmit: loginSchema,
     },
     onSubmit: async ({ value }) => {
+      //if the user is suspended or not
+      const { data: statusData, error: statusError } =
+        await getUserProfileStatusAction(value.email);
+      // console.log("Profile status on", statusData);
+      if (statusData?.data?.status === "suspend") {
+        gooeyToast.error("Your account has been banned", {
+          description:
+            "For violating our terms and conditions your account has been suspended. If you think that this happened accidently, please contact use",
+        });
+        return;
+      }
+
       const toastId = toast("Signing in....");
       try {
-        const {data, error } = await authClient.signIn.email(value);
+        const { data, error } = await authClient.signIn.email(value);
         console.log(error);
-    
+
         if (error) {
           toast.error(error.message, { id: toastId });
           return;
@@ -63,6 +78,7 @@ export function LoginForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <GooeyToaster position="top-center" />
       <Card>
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
@@ -131,7 +147,8 @@ export function LoginForm({
                 </Button>
 
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <Link href="/register">Sign up</Link>
+                  Don&apos;t have an account?{" "}
+                  <Link href="/register">Sign up</Link>
                 </FieldDescription>
               </UIField>
             </FieldGroup>

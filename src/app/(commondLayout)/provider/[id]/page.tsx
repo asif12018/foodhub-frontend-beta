@@ -3,6 +3,7 @@ import { ProductCard1, Product } from "@/components/product-card1";
 import { Star, MapPin, Clock } from "lucide-react";
 import foodSingleData from "../../../../constants/food.types";
 import ProviderProfile from "@/components/commerce-ui/Provider-Profile";
+import { toast } from "sonner";
 
 export default async function ProviderDetailsPage({
   params,
@@ -13,7 +14,9 @@ export default async function ProviderDetailsPage({
 
   const { data, error } = await getProviderProfileByIdAction(id);
 
-
+  if(error){
+    toast.error(error.message || "Failed to fetch provider");
+  }
 
   if (error || !data?.data) {
     return (
