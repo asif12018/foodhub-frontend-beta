@@ -88,28 +88,19 @@ const Navbar = ({ className }: Navbar5Props) => {
   };
 
   return (
-    <section className={cn("py-4", className)}>
+    <header className={cn("sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md shadow-sm py-3 transition-all", className)}>
       <div className="container">
         <nav className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <img
               src="https://raw.githubusercontent.com/asif12018/image/main/logo-removebg-preview.png"
-              className="max-h-10"
+              className="max-h-10 transition-transform hover:scale-105"
               alt="Foodhub logo"
             />
-            {/* <span className="text-lg font-semibold tracking-tighter">
-              FoodHub
-            </span> */}
           </Link>
           <NavigationMenu className="hidden lg:block">
             <NavigationMenuList>
               <NavigationMenuItem>
-                {/* <NavigationMenuLink
-                  href="#"
-                  className={navigationMenuTriggerStyle()}
-                >
-                  Products
-                </NavigationMenuLink> */}
                 <Link href="/" className={navigationMenuTriggerStyle()}>
                   home
                 </Link>
@@ -214,16 +205,7 @@ const Navbar = ({ className }: Navbar5Props) => {
             </NavigationMenuList>
           </NavigationMenu>
           <div className="hidden items-center gap-4 lg:flex">
-            {/* <Button asChild variant="outline"><Link href={"/signin"} >Sign in</Link></Button>
-            <Button onClick={()=>handleLogout()} disabled={isPending} variant="outline">{isPending ? "Signing out..." : "Sign out"}</Button> */}
-
             {loading ? null : session ? (
-              // USER LOGGED IN
-              // <Button
-              //   onClick={handleLogout}
-              //   disabled={isPending}
-              //   variant="outline"
-              // >
               <ProfileIcon
                 sessionData={sessionDatas}
                 userData={sessionData?.user}
@@ -231,7 +213,6 @@ const Navbar = ({ className }: Navbar5Props) => {
                 isLoggingOut={isPending}
               />
             ) : (
-              // USER NOT LOGGED IN
               <Button asChild variant="outline">
                 <Link href="/signin">Sign in</Link>
               </Button>
@@ -316,8 +297,6 @@ const Navbar = ({ className }: Navbar5Props) => {
                 </div>
                 <div className="mt-6 flex flex-col gap-4">
                   {loading ? null : session ? (
-                    //   {isPending ? "Signing out..." : "Sign out"}
-                    // </Button>
                     <ProfileIcon
                       sessionData={sessionDatas}
                       userData={sessionData?.user}
@@ -347,7 +326,7 @@ const Navbar = ({ className }: Navbar5Props) => {
           </Sheet>
         </nav>
       </div>
-    </section>
+    </header>
   );
 };
 
