@@ -124,6 +124,26 @@ const Navbar = ({ className }: Navbar5Props) => {
                 </NavigationMenuLink>
               </NavigationMenuItem>
 
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="#"
+                  className={navigationMenuTriggerStyle()}
+                  asChild
+                >
+                  <Link href="/about"> About</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="#"
+                  className={navigationMenuTriggerStyle()}
+                  asChild
+                >
+                  <Link href="/contact"> Contact</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
 
               <NavigationMenuItem>
                 <NavigationMenuLink
@@ -253,6 +273,12 @@ const Navbar = ({ className }: Navbar5Props) => {
                   </Link>
                   <Link href="/allFood" className="font-medium">
                     Menu
+                  </Link>
+                  <Link href="/about" className="font-medium">
+                    About
+                  </Link>
+                  <Link href="/contact" className="font-medium">
+                    Contact
                   </Link>
                    <Link href="/allProvider" className="font-medium">
                     All Provider

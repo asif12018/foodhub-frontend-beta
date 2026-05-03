@@ -283,13 +283,18 @@ export const columns: ColumnDef<z.infer<typeof schema>>[] = [
 ];
 
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import {
+  getFilteredRowModel,
+  getPaginationRowModel,
+} from "@tanstack/react-table";
 
 export const DataTable1 = ({ data }: { data: any }) => {
   const router = useRouter();
 
   const handleSuspend = async (userId: string) => {
     try {
-      const { data, error } = await suspendAUserAction(userId);
+      const { error } = await suspendAUserAction(userId);
       if (error) {
         toast.error("Failed to suspend user");
       } else {
@@ -300,9 +305,10 @@ export const DataTable1 = ({ data }: { data: any }) => {
       toast.error("Failed to suspend user");
     }
   };
+
   const handleActivate = async (userId: string) => {
     try {
-      const { data, error } = await activateAUserAction(userId);
+      const { error } = await activateAUserAction(userId);
       if (error) {
         toast.error("Failed to activate user");
       } else {
@@ -314,6 +320,67 @@ export const DataTable1 = ({ data }: { data: any }) => {
     }
   };
 
+  const userColumns: ColumnDef<any>[] = [
+    {
+      accessorKey: "id",
+      header: "Id",
+    },
+    {
+      accessorKey: "name",
+      header: "Name",
+    },
+    {
+      accessorKey: "email",
+      header: "Email",
+    },
+    {
+      accessorKey: "roles",
+      header: "Role",
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => {
+        const user = row.original;
+        return user.status === "activate" ? (
+          <Button
+            onClick={() => handleSuspend(user.id)}
+            variant="destructive"
+            size="sm"
+          >
+            Suspend
+          </Button>
+        ) : (
+          <Button
+            onClick={() => handleActivate(user.id)}
+            variant="default"
+            size="sm"
+          >
+            Activate
+          </Button>
+        );
+      },
+    },
+  ];
+
+  const [globalFilter, setGlobalFilter] = React.useState("");
+  
+  const table = useReactTable({
+    data: data || [],
+    columns: userColumns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      globalFilter,
+    },
+    onGlobalFilterChange: setGlobalFilter,
+  });
+
   return (
     <section className="py-32">
       <div className="container">
@@ -324,52 +391,83 @@ export const DataTable1 = ({ data }: { data: any }) => {
               suspend or activate a user
             </p>
           </div>
+          
+          <div className="flex items-center py-4">
+            <Input
+              placeholder="Search users..."
+              value={globalFilter ?? ""}
+              onChange={(event) => setGlobalFilter(String(event.target.value))}
+              className="max-w-sm"
+            />
+          </div>
+
           <div className="overflow-hidden rounded-md border">
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Id</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data?.map((row: any) => (
-                  <TableRow key={row.id}>
-                    <TableCell>{row.id}</TableCell>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.email}</TableCell>
-                    <TableCell>{row.roles}</TableCell>
-                    <TableCell>{row.status}</TableCell>
-                    <TableCell>
-                      {/* <Button variant="outline" size="sm">
-                          Actions
-                        </Button> */}
-                      {row.status === "activate" ? (
-                        <Button
-                          onClick={() => handleSuspend(row.id)}
-                          variant="destructive"
-                          size="sm"
-                        >
-                          Suspend
-                        </Button>
-                      ) : (
-                        <Button
-                          onClick={() => handleActivate(row.id)}
-                          variant="default"
-                          size="sm"
-                        >
-                          Activate
-                        </Button>
-                      )}
-                    </TableCell>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      return (
+                        <TableHead key={header.id}>
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                        </TableHead>
+                      );
+                    })}
                   </TableRow>
                 ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={userColumns.length}
+                      className="h-24 text-center"
+                    >
+                      No results.
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
+          </div>
+          <div className="flex items-center justify-end space-x-2 py-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
           </div>
         </div>
       </div>

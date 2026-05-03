@@ -4,14 +4,14 @@ import { Separator } from "@/components/ui/separator"
 
 export default function Footer() {
     const footerLinks = [
-        { label: "Home", href: "#" },
-        { label: "Categories", href: "#" },
-        { label: "Properties", href: "#" },
-        { label: "Featured property", href: "#" },
-        { label: "Testimonials", href: "#" },
+        { label: "Home", href: "/" },
+        { label: "Menu", href: "/allFood" },
+        { label: "Providers", href: "/allProvider" },
+        { label: "About Us", href: "/about" },
+        { label: "Contact", href: "/contact" },
         { label: "Blog", href: "#" },
         { label: "FAQs", href: "#" },
-        { label: "404 page", href: "#" },
+        { label: "Terms & Conditions", href: "#" },
     ]
     return (
         <footer className="">
