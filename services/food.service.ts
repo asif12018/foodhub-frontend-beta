@@ -14,6 +14,8 @@ export interface GetFoodParams {
   maxPrice?: number;
   limit?: number;
   page?: number;
+  sortBy?: string;
+  sortOrder?: string;
 }
 
 interface ServiceOptions {

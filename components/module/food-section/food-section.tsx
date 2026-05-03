@@ -39,7 +39,7 @@ export default async function FoodSection() {
                 currency: "BDT",
               },
               image: {
-                src: food.imageUrl || "https://placehold.co/600x400",
+                src: food.imageUrl || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop",
                 alt: food.name,
               },
               cuisine: food.cuisine,

@@ -346,8 +346,8 @@ const ProductDetail1 = ({ className, food }: ProductDetail1Props) => {
             <ProductImages
               images={[
                 {
-                  src: food.imageUrl || "https://placehold.co/600x400",
-                  srcset: food.imageUrl || "https://placehold.co/600x400",
+                  src: food.imageUrl || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop",
+                  srcset: food.imageUrl || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop",
                   alt: food.name || "food image",
                   width: 600,
                   height: 400,

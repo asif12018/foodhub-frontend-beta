@@ -106,7 +106,7 @@ export default async function ProviderDetailsPage({
                 image: {
                   src:
                     meal.imageUrl ||
-                    "https://placehold.co/600x400/png?text=No+Image",
+                    "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop",
                   alt: meal.name,
                 },
                 link: `/allFood/${meal.id}`,

@@ -15,6 +15,7 @@ import CheckboxDiateryPreference from "@/components/dietary-filter";
 import { Slider } from "@/components/ui/slider";
 import { SliderControlled } from "@/components/module/get all food/slider";
 import { toast } from "sonner";
+import { SearchSortFilter } from "@/components/module/get all food/search-sort-filter";
 
 export default async function AllFood({
   searchParams,
@@ -25,6 +26,8 @@ export default async function AllFood({
     dietary_tags?: string;
     minPrice?: string;
     maxPrice?: string;
+    search?: string;
+    sortBy?: string;
   }>;
 }) {
   //pagination code
@@ -34,6 +37,8 @@ export default async function AllFood({
   const dietary_tags = resolvedParams.dietary_tags;
   const minPrice = resolvedParams.minPrice;
   const maxPrice = resolvedParams.maxPrice;
+  const search = resolvedParams.search;
+  const sortBy = resolvedParams.sortBy;
 
   //-----------------
   const { data: categoriesData } = await categoryService.getAllCategory();
@@ -46,6 +51,8 @@ export default async function AllFood({
       dietary_tags: dietary_tags ? dietary_tags.split(",") : undefined,
       minPrice: minPrice ? Number(minPrice) : undefined,
       maxPrice: maxPrice ? Number(maxPrice) : undefined,
+      search: search,
+      ...(sortBy && { sortBy: sortBy }),
     },
     {
       cache: "no-store",
@@ -76,6 +83,8 @@ export default async function AllFood({
     if (dietary_tags) params.set("dietary_tags", dietary_tags);
     if (minPrice) params.set("minPrice", minPrice);
     if (maxPrice) params.set("maxPrice", maxPrice);
+    if (search) params.set("search", search);
+    if (sortBy) params.set("sortBy", sortBy);
     params.set("page", pageNumber.toString());
     return `?${params.toString()}`;
   };
@@ -85,6 +94,9 @@ export default async function AllFood({
   return (
     <div>
       <h1 className="text-2xl font-bold text-center mt-5">All Food</h1>
+      <div className="container mx-auto px-4 md:px-0">
+        <SearchSortFilter />
+      </div>
       <CuisineFilter categories={categoriesData?.data || []} />
       <div className="my-5 flex items-center justify-center gap-2">
         <CheckboxDiateryPreference />
@@ -114,7 +126,7 @@ export default async function AllFood({
                   currency: "BDT",
                 },
                 image: {
-                  src: food.imageUrl || "https://placehold.co/600x400",
+                  src: food.imageUrl || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop",
                   alt: food.name,
                 },
                 cuisine: food.cuisine,
