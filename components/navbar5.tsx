@@ -87,6 +87,8 @@ const Navbar = ({ className }: Navbar5Props) => {
     }
   };
 
+  //dfdfdf
+
   return (
     <header className={cn("sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md shadow-sm py-3 transition-all", className)}>
       <div className="container">
