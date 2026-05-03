@@ -28,6 +28,7 @@ import { getSession } from "@/server action/auth.action";
 import { authClient } from "@/src/app/lib/auth-client";
 import ProfileIcon from "./profileDropDown";
 import Image from "next/image";
+import { ModeToggle } from "@/components/theme-toggle";
 
 interface Navbar5Props {
   className?: string;
@@ -236,6 +237,8 @@ const Navbar = ({ className }: Navbar5Props) => {
               </Button>
             )}
 
+            <ModeToggle />
+
             {!session && (
               <Button asChild>
                 <Link href="/register">Start for free</Link>
@@ -334,6 +337,10 @@ const Navbar = ({ className }: Navbar5Props) => {
                       <Link href="/register">Start for free</Link>
                     </Button>
                   )}
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">Theme</span>
+                    <ModeToggle />
+                  </div>
                 </div>
               </div>
             </SheetContent>
