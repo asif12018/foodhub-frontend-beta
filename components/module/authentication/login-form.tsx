@@ -38,6 +38,13 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   const router = useRouter();
 
+  const handleGoogleLogin = async () =>{
+    await authClient.signIn.social({
+      provider:"google",
+      callbackURL:"/"
+    })
+  };
+
   const form = useForm({
     defaultValues: {
       email: "",
@@ -153,6 +160,7 @@ export function LoginForm({
               </UIField>
             </FieldGroup>
           </form>
+          <button onClick={handleGoogleLogin}>Login with Google</button>
         </CardContent>
       </Card>
     </div>
