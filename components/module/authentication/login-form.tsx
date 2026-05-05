@@ -112,7 +112,7 @@ export function LoginForm({
     <div className={cn("flex flex-col items-center gap-6", className)} {...props}>
       <GooeyToaster position="top-center" />
       <Link href="/" className="flex items-center gap-2">
-        <span className="text-3xl font-bold bg-linear-to-r from-primary to-blue-600 bg-clip-text text-transparent">FoodHub</span>
+        <span className="text-3xl font-bold bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">FoodHub</span>
       </Link>
       <Card className="w-full max-w-sm shadow-md">
         <CardHeader>

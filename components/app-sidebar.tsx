@@ -56,12 +56,12 @@ export function AppSidebar({
 
   return (
     <Sidebar {...props}>
-      <SidebarHeader className="text-center">
+      <SidebarHeader className="font-bold text-lg">
         {/* <VersionSwitcher
           versions={data.versions}
           defaultVersion={data.versions[0]}
         /> */}
-        Dashbard
+        Dashboard
         {/* <SearchForm /> */}
       </SidebarHeader>
       <SidebarContent>

@@ -18,7 +18,7 @@ export default async function UserProfilePage() {
 
       <div className="rounded-2xl border bg-card text-card-foreground shadow-sm overflow-hidden">
         {/* Banner */}
-        <div className="h-28 bg-linear-to-r from-primary/30 to-blue-500/20 relative" />
+        <div className="h-28 bg-linear-to-r from-primary/30 to-secondary relative" />
 
         {/* Avatar + Edit */}
         <div className="px-6 pb-6 -mt-12">
@@ -48,7 +48,7 @@ export default async function UserProfilePage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-blue-500/10 text-blue-500 rounded-xl">
+                <div className="p-2.5 bg-primary/10 text-primary rounded-xl">
                   <Mail className="w-4 h-4" />
                 </div>
                 <div>
@@ -58,7 +58,7 @@ export default async function UserProfilePage() {
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-emerald-500/10 text-emerald-500 rounded-xl">
+                <div className="p-2.5 bg-secondary text-secondary-foreground rounded-xl">
                   <Phone className="w-4 h-4" />
                 </div>
                 <div>
@@ -68,7 +68,7 @@ export default async function UserProfilePage() {
               </div>
 
               <div className="flex items-center gap-3 sm:col-span-2">
-                <div className="p-2.5 bg-amber-500/10 text-amber-500 rounded-xl">
+                <div className="p-2.5 bg-muted text-foreground rounded-xl">
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div>

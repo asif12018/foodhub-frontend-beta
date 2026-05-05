@@ -26,32 +26,32 @@ const serviceData: ServiceData[] = [
   {
     service_icon: SwatchBook,
     service_title: "Browse Restaurants",
-    service_bg_color: "bg-blue-500/10",
-    service_text_color: "text-blue-500",
+    service_bg_color: "bg-primary/10",
+    service_text_color: "text-primary",
   },
   {
     service_icon: WandSparkles,
     service_title: "Check Our Menu",
-    service_bg_color: "bg-orange-400/10",
-    service_text_color: "text-orange-400",
+    service_bg_color: "bg-secondary",
+    service_text_color: "text-secondary-foreground",
   },
   {
     service_icon: BarChart3,
     service_title: "Order Food Online",
-    service_bg_color: "bg-teal-400/10",
-    service_text_color: "text-teal-400",
+    service_bg_color: "bg-muted",
+    service_text_color: "text-foreground",
   },
   {
     service_icon: Image,
     service_title: "Cash on Delivery",
-    service_bg_color: "bg-sky-400/10",
-    service_text_color: "text-sky-400",
+    service_bg_color: "bg-accent",
+    service_text_color: "text-accent-foreground",
   },
   {
     service_icon: AppWindowMac,
     service_title: "Leave a Review",
-    service_bg_color: "bg-red-500/10",
-    service_text_color: "text-red-500",
+    service_bg_color: "bg-primary/10",
+    service_text_color: "text-primary",
   },
 ];
 

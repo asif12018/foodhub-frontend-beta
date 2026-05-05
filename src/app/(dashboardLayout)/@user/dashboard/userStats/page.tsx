@@ -25,33 +25,33 @@ export default async function UserStatsPage() {
       title: "Total Orders",
       value: totalOrders,
       icon: ShoppingBag,
-      color: "text-blue-500 dark:text-blue-400",
-      bgColor: "bg-blue-500/10",
-      border: "border-blue-500/20",
+      color: "text-primary",
+      bgColor: "bg-primary/10",
+      border: "border-primary/20",
     },
     {
       title: "Cart Items",
       value: totalCartItems,
       icon: ShoppingCart,
-      color: "text-amber-500 dark:text-amber-400",
-      bgColor: "bg-amber-500/10",
-      border: "border-amber-500/20",
+      color: "text-foreground",
+      bgColor: "bg-muted",
+      border: "border-muted-foreground/20",
     },
     {
       title: "Pending Orders",
       value: pendingOrders,
       icon: Calendar,
-      color: "text-indigo-500 dark:text-indigo-400",
-      bgColor: "bg-indigo-500/10",
-      border: "border-indigo-500/20",
+      color: "text-secondary-foreground",
+      bgColor: "bg-secondary",
+      border: "border-secondary-foreground/20",
     },
     {
       title: "Delivered",
       value: deliveredOrders,
       icon: Star,
-      color: "text-emerald-500 dark:text-emerald-400",
-      bgColor: "bg-emerald-500/10",
-      border: "border-emerald-500/20",
+      color: "text-primary",
+      bgColor: "bg-primary/10",
+      border: "border-primary/20",
     },
   ];
 
@@ -85,8 +85,8 @@ export default async function UserStatsPage() {
               </div>
             </div>
             <div className="mt-5 flex items-center text-xs text-muted-foreground font-medium">
-              <TrendingUp className="w-3.5 h-3.5 mr-1.5 text-emerald-500" />
-              <span className="text-emerald-500 mr-1.5">Live</span>
+              <TrendingUp className="w-3.5 h-3.5 mr-1.5 text-primary" />
+              <span className="text-primary mr-1.5">Live</span>
               <span>Updated just now</span>
             </div>
           </div>
@@ -139,10 +139,10 @@ export default async function UserStatsPage() {
                     <p className="text-sm font-bold">{order.totalPrice}tk</p>
                     <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                       order.status === "CANCELLED"
-                        ? "bg-red-500/10 text-red-500"
+                        ? "bg-destructive/10 text-destructive"
                         : order.status === "DELIVERED" || order.status === "READY"
-                        ? "bg-emerald-500/10 text-emerald-500"
-                        : "bg-amber-500/10 text-amber-500"
+                        ? "bg-primary/10 text-primary"
+                        : "bg-secondary text-secondary-foreground"
                     }`}>
                       {order.status}
                     </span>

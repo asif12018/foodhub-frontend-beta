@@ -163,7 +163,7 @@ const RegisterForm = ({
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center gap-6 lg:justify-start">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-3xl font-bold bg-linear-to-r from-primary to-blue-600 bg-clip-text text-transparent">FoodHub</span>
+            <span className="text-3xl font-bold bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">FoodHub</span>
           </Link>
           <div className="flex w-full max-w-sm min-w-sm flex-col items-center gap-y-4 rounded-md border border-muted bg-background px-6 py-8 shadow-md">
             {heading && <h1 className="text-xl font-semibold">{heading}</h1>}
@@ -406,6 +406,23 @@ const RegisterForm = ({
 
             <Button form="registration-form" type="submit" className="w-full">
               Register
+            </Button>
+            <div className="flex items-center gap-4 w-full my-2">
+              <div className="h-px flex-1 bg-muted"></div>
+              <span className="text-xs text-muted-foreground uppercase">Or</span>
+              <div className="h-px flex-1 bg-muted"></div>
+            </div>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={async () => {
+                await authClient.signIn.social({
+                  provider: "google",
+                  callbackURL: "https://foodhub-frontend-omega.vercel.app/",
+                });
+              }}
+            >
+              Register with Google
             </Button>
           </div>
           <div className="flex justify-center gap-1 text-sm text-muted-foreground">
