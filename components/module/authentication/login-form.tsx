@@ -38,19 +38,20 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   const router = useRouter();
 
-  const handleGoogleLogin = async () =>{
+  const handleGoogleLogin = async () => {
     await authClient.signIn.social({
-      provider:"google",
+      provider: "google",
       // Must be the exact frontend URL
-    callbackURL: "https://foodhub-frontend-omega.vercel.app/"
-    })
+      callbackURL: "https://foodhub-frontend-omega.vercel.app/",
+    });
   };
 
   const handleDemoLogin = async (email: string, password: string) => {
     const { data: statusData } = await getUserProfileStatusAction(email);
     if (statusData?.data?.status === "suspend") {
       gooeyToast.error("Your account has been banned", {
-        description: "For violating our terms and conditions your account has been suspended.",
+        description:
+          "For violating our terms and conditions your account has been suspended.",
       });
       return;
     }
@@ -108,9 +109,12 @@ export function LoginForm({
   });
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn("flex flex-col items-center gap-6", className)} {...props}>
       <GooeyToaster position="top-center" />
-      <Card>
+      <Link href="/" className="flex items-center gap-2">
+        <span className="text-3xl font-bold bg-linear-to-r from-primary to-blue-600 bg-clip-text text-transparent">FoodHub</span>
+      </Link>
+      <Card className="w-full max-w-sm shadow-md">
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
           <CardDescription>
@@ -177,28 +181,31 @@ export function LoginForm({
                   Login
                 </Button>
 
-                <FieldDescription className="text-center">
-                  Don&apos;t have an account?{" "}
-                  <Link href="/register">Sign up</Link>
-                </FieldDescription>
+                
               </UIField>
             </FieldGroup>
           </form>
           <div className="flex flex-col gap-2 mt-4">
-            <Button className="w-full" onClick={()=>handleGoogleLogin()}>Login with Google</Button>
-            
+            <Button className="w-full" onClick={() => handleGoogleLogin()}>
+              Login with Google
+            </Button>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-2">
               <Button
                 variant="outline"
                 type="button"
-                onClick={() => handleDemoLogin("demo@customer.com", "123456789")}
+                onClick={() =>
+                  handleDemoLogin("demo@customer.com", "123456789")
+                }
               >
                 Demo User
               </Button>
               <Button
                 variant="outline"
                 type="button"
-                onClick={() => handleDemoLogin("demo@provider.com", "123456789")}
+                onClick={() =>
+                  handleDemoLogin("demo@provider.com", "123456789")
+                }
               >
                 Demo Provider
               </Button>
@@ -212,6 +219,12 @@ export function LoginForm({
             </div>
           </div>
         </CardContent>
+         <UIField>
+                <FieldDescription className="text-center">
+                  Don&apos;t have an account?{" "}
+                  <Link href="/register">Sign up</Link>
+                </FieldDescription>
+              </UIField>
       </Card>
     </div>
   );

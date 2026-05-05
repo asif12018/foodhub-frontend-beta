@@ -14,6 +14,12 @@ export const getProviderAllOrder = async()=>{
     return res;
 }
 
+export const getUserMyOrders = async()=>{
+    const res = await orderService.getUserMyOrders();
+    return res;
+}
+
+
 export const updateOrderStatusAction = async(orderId: string, status: string)=>{
     const res = await orderService.updateOrderStatus(orderId, status);
     return res;

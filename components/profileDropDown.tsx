@@ -66,43 +66,46 @@ const ProfileIcon = ({
               {sessionData?.user?.email || userData?.email}
             </p>
             <Badge className="w-fit text-xs" variant="secondary">
-              Pro
+              {userData?.roles || "User"}
             </Badge>
           </div>
         </div>
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
-      <DropdownMenuItem>
-        {userData?.roles === "Customer" ? (
-          <>
-            <Link href="/profile" className="flex items-center gap-2">
-              <User />
-              View Profile
+      {userData?.roles === "Customer" && (
+        <>
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard/userStats" className="flex w-full items-center gap-2 cursor-pointer">
+              <Settings className="h-4 w-4" />
+              <span>User Dashboard</span>
             </Link>
-          </>
-        ) : null}
-      </DropdownMenuItem>
-      {/* <DropdownMenuItem>
-        <CreditCard />
-        Billing
-      </DropdownMenuItem> */}
-      <DropdownMenuItem>
-        {userData?.roles === "Customer" && (
-          <div className="flex items-center gap-1">
-            <Settings />
-            <Link href={"/editProfile"}>Edit Profile</Link>
-          </div>
-        )}
-      </DropdownMenuItem>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard/profile" className="flex w-full items-center gap-2 cursor-pointer">
+              <User className="h-4 w-4" />
+              <span>View Profile</span>
+            </Link>
+          </DropdownMenuItem>
+        </>
+      )}
 
-      <DropdownMenuItem>
-        {userData?.roles === "Provider" && (
-          <div className="flex items-center gap-1">
-            <Settings />
-            <Link href={"/providerStats"}>Provider Stats</Link>
-          </div>
-        )}
-      </DropdownMenuItem>
+      {userData?.roles === "Provider" && (
+        <DropdownMenuItem asChild>
+          <Link href="/dashboard/providerStats" className="flex w-full items-center gap-2 cursor-pointer">
+            <Settings className="h-4 w-4" />
+            <span>Provider Dashboard</span>
+          </Link>
+        </DropdownMenuItem>
+      )}
+
+      {userData?.roles === "Admin" && (
+        <DropdownMenuItem asChild>
+          <Link href="/dashboard/adminStats" className="flex w-full items-center gap-2 cursor-pointer">
+            <Settings className="h-4 w-4" />
+            <span>Admin Dashboard</span>
+          </Link>
+        </DropdownMenuItem>
+      )}
       <DropdownMenuSeparator />
       <DropdownMenuItem variant="destructive" onClick={onLogout}>
         <LogOut className="mr-2 h-4 w-4" />

@@ -90,9 +90,9 @@ const Navbar = ({ className }: Navbar5Props) => {
   //dfdfdf
 
   return (
-    <header className={cn("sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md shadow-sm py-3 transition-all", className)}>
-      <div className="container">
-        <nav className="flex items-center justify-between">
+    <header className={cn("sticky top-0 z-50 w-full  bg-background/80 backdrop-blur-md shadow-sm py-3 transition-all", className)}>
+      <div className="container mx-auto">
+        <nav className="flex items-center justify-between border-none">
           <Link href="/" className="flex items-center gap-2">
             <img
               src="https://raw.githubusercontent.com/asif12018/image/main/logo-removebg-preview.png"
@@ -100,15 +100,15 @@ const Navbar = ({ className }: Navbar5Props) => {
               alt="Foodhub logo"
             />
           </Link>
-          <NavigationMenu className="hidden lg:block">
-            <NavigationMenuList>
+          <NavigationMenu className="hidden lg:block border-none">
+            <NavigationMenuList className="border-none bg-transparent">
               <NavigationMenuItem>
                 <Link href="/" className={navigationMenuTriggerStyle()}>
                   home
                 </Link>
               </NavigationMenuItem>
 
-              <NavigationMenuItem>
+              <NavigationMenuItem className="border-none">
                 <NavigationMenuLink
                   href="#"
                   className={navigationMenuTriggerStyle()}
@@ -193,17 +193,27 @@ const Navbar = ({ className }: Navbar5Props) => {
                   )}
                 </NavigationMenuLink>
               </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="#"
-                  className={navigationMenuTriggerStyle()}
-                  asChild
-                >
-                  {sessionDatas?.user?.roles === "Admin" && (
-                    <Link href="/dashboard/adminStats"> Dashboard</Link>
-                  )}
-                </NavigationMenuLink>
-              </NavigationMenuItem>
+              {sessionDatas?.user?.roles === "Admin" && (
+                <NavigationMenuItem>
+                  <NavigationMenuLink href="/dashboard/adminStats" className={navigationMenuTriggerStyle()}>
+                    Dashboard
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              )}
+              {sessionDatas?.user?.roles === "Provider" && (
+                <NavigationMenuItem>
+                  <NavigationMenuLink href="/dashboard/providerStats" className={navigationMenuTriggerStyle()}>
+                    Dashboard
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              )}
+              {sessionDatas?.user?.roles === "Customer" && (
+                <NavigationMenuItem>
+                  <NavigationMenuLink href="/dashboard/userStats" className={navigationMenuTriggerStyle()}>
+                    Dashboard
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              )}
             </NavigationMenuList>
           </NavigationMenu>
           <div className="hidden items-center gap-4 lg:flex">
@@ -293,6 +303,16 @@ const Navbar = ({ className }: Navbar5Props) => {
 
                   {sessionDatas?.user?.roles === "Admin" && (
                     <Link href="/dashboard/adminStats" className="font-medium">
+                      Dashboard
+                    </Link>
+                  )}
+                  {sessionDatas?.user?.roles === "Provider" && (
+                    <Link href="/dashboard/providerStats" className="font-medium">
+                      Dashboard
+                    </Link>
+                  )}
+                  {sessionDatas?.user?.roles === "Customer" && (
+                    <Link href="/dashboard/userStats" className="font-medium">
                       Dashboard
                     </Link>
                   )}

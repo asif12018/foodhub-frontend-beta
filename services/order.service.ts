@@ -51,6 +51,23 @@ export const orderService = {
       return { data: null, error: err.message };
     }
   },
+  getUserMyOrders: async () => {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${BACKEND_URL}/api/order/myOrder`, {
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        credentials: "include",
+        cache: "no-store",
+      });
+      const data = await res.json();
+      return { data: data, error: null };
+    } catch (err: any) {
+      return { data: null, error: err.message };
+    }
+  },
   updateOrderStatus: async (orderId: string, status: string) => {
     try {
       const cookieStore = await cookies();

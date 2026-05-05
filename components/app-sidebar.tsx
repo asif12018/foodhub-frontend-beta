@@ -31,17 +31,18 @@ const adminNav = [
 ];
 
 const customerNav = [
-  { title: "My Profile", url: "/profile" },
-  { title: "My Orders", url: "/my-order" },
-  { title: "Cart", url: "/cart" },
+  { title: "User Stats", url: "/dashboard/userStats" },
+  { title: "My Profile", url: "/dashboard/profile" },
+  { title: "My Orders", url: "/dashboard/my-order" },
+  { title: "Cart", url: "/dashboard/cart" },
   { title: "Home", url: "/" }
 ];
 
 const providerNav = [
-  { title: "Provider Stats", url: "/providerStats" },
-  { title: "My Menu", url: "/my-menu" },
-  { title: "Add Menu", url: "/add-menu" },
-  { title: "My Orders", url: "/my-order" },
+  { title: "Provider Stats", url: "/dashboard/providerStats" },
+  { title: "My Menu", url: "/dashboard/my-menu" },
+  { title: "Add Menu", url: "/dashboard/add-menu" },
+  { title: "My Orders", url: "/dashboard/my-order" },
   { title: "Home", url: "/" }
 ];
 
@@ -55,12 +56,13 @@ export function AppSidebar({
 
   return (
     <Sidebar {...props}>
-      <SidebarHeader>
-        <VersionSwitcher
+      <SidebarHeader className="text-center">
+        {/* <VersionSwitcher
           versions={data.versions}
           defaultVersion={data.versions[0]}
-        />
-        <SearchForm />
+        /> */}
+        Dashbard
+        {/* <SearchForm /> */}
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

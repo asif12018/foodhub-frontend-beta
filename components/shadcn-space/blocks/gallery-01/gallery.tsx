@@ -5,7 +5,7 @@ const Gallery = () => {
     <>
       <div className="lg:py-20 sm:py-16 py-8 w-full">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 xl:px-16 py-10 w-full">
-          <h1 className="text-2xl font-bold text-black text-center py-3">Moment Shared by Our happy Customer</h1>
+          <h1 className="text-2xl font-bold text-foreground text-center py-3">Moment Shared by Our happy Customer</h1>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {/* LEFT – Large card */}
             

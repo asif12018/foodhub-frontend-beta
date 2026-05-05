@@ -90,7 +90,7 @@ const publicRoutes = ["/allFood"];
 // Notice the trailing slash on "/allFood/". 
 // This allows startsWith() to match "/allFood/123" but safely ignore "/allFood"
 const routeAccessMap: Record<string, UserRoles[]> = {
-  "/dashboard": [UserRoles.Admin],
+  "/dashboard": [UserRoles.Admin, UserRoles.Customer, UserRoles.Provider],
   "/profile": [UserRoles.Customer],
   "/editProfile": [UserRoles.Customer],
   "/cart": [UserRoles.Customer],
