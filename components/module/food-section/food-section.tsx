@@ -6,7 +6,7 @@ export default async function FoodSection() {
   const { data, error } = await foodService.getAllFood(
     {
       isFeatured: false,
-      limit: 3,
+      limit: 4,
       page: 1,
     },
     {
@@ -26,7 +26,7 @@ export default async function FoodSection() {
           Explore our wide range of delicious food options
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {data?.data?.data?.map((food) => (
           <ProductCard1
             key={food.id}

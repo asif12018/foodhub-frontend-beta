@@ -41,8 +41,32 @@ export function LoginForm({
   const handleGoogleLogin = async () =>{
     await authClient.signIn.social({
       provider:"google",
-      callbackURL:"/"
+      // Must be the exact frontend URL
+    callbackURL: "https://foodhub-frontend-omega.vercel.app/"
     })
+  };
+
+  const handleDemoLogin = async (email: string, password: string) => {
+    const { data: statusData } = await getUserProfileStatusAction(email);
+    if (statusData?.data?.status === "suspend") {
+      gooeyToast.error("Your account has been banned", {
+        description: "For violating our terms and conditions your account has been suspended.",
+      });
+      return;
+    }
+
+    const toastId = toast("Signing in....");
+    try {
+      const { error } = await authClient.signIn.email({ email, password });
+      if (error) {
+        toast.error(error.message, { id: toastId });
+        return;
+      }
+      toast.success("User Signin successfully", { id: toastId });
+      window.location.href = "/";
+    } catch (err) {
+      toast.error("Something went wrong", { id: toastId });
+    }
   };
 
   const form = useForm({
@@ -160,7 +184,33 @@ export function LoginForm({
               </UIField>
             </FieldGroup>
           </form>
-          <button onClick={handleGoogleLogin}>Login with Google</button>
+          <div className="flex flex-col gap-2 mt-4">
+            <Button className="w-full" onClick={()=>handleGoogleLogin()}>Login with Google</Button>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-2">
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => handleDemoLogin("demo@customer.com", "123456789")}
+              >
+                Demo User
+              </Button>
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => handleDemoLogin("demo@provider.com", "123456789")}
+              >
+                Demo Provider
+              </Button>
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => handleDemoLogin("test@gmail.com", "123456789")}
+              >
+                Demo Admin
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
