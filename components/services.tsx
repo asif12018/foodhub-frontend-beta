@@ -21,6 +21,7 @@ type ServiceData = {
   service_bg_color: string;
   service_text_color: string;
 };
+import Link from "next/link";
 
 const serviceData: ServiceData[] = [
   {
@@ -136,7 +137,7 @@ const Services = () => {
               <div className="flex md:flex-row flex-col items-center gap-4">
                 <Button className="group text-sm font-medium text-black bg-white hover:text-black dark:hover:text-black hover:bg-white/90 rounded-full flex items-center gap-4 p-1 ps-5 w-fit h-12">
                   <a href="#" className="flex items-center gap-4">
-                    <span>Order Now</span>
+                    <Link href={"/allFood"}>Order Now</Link>
                     <div className="p-3 bg-black text-white rounded-full group-hover:rotate-45 transition-transform duration-300 ease-in-out">
                       <ArrowUpRight size={16} />
                     </div>
@@ -144,7 +145,7 @@ const Services = () => {
                 </Button>
                 <Button className="group text-sm font-medium text-white bg-gray-950 hover:text-white dark:hover:text-white hover:bg-gray-950/90 rounded-full border border-white/50 flex items-center gap-4 p-1 ps-5 w-fit h-12">
                   <a href="#" className="flex items-center gap-4">
-                    <span>Contact Us</span>
+                    <Link href="/contact">Contact Us</Link>
                     <div className="p-3 bg-white text-black rounded-full group-hover:rotate-45 transition-transform duration-300 ease-in-out">
                       <ArrowUpRight size={16} />
                     </div>

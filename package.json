@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@hookform/resolvers": "^5.2.2",
     "@iconify/react": "^6.0.2",
     "@t3-oss/env-nextjs": "^0.13.10",

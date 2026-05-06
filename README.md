@@ -14,23 +14,55 @@
 </p>
 
 <p align="center">
+  <a href="#-live-demo">Live Demo</a> •
+  <a href="#-overview--problem-statement">Overview</a> •
+  <a href="#-architecture--scalability">Architecture</a> •
   <a href="#-features">Features</a> •
   <a href="#-tech-stack">Tech Stack</a> •
-  <a href="#-project-structure">Project Structure</a> •
-  <a href="#-getting-started">Getting Started</a> •
-  <a href="#-environment-variables">Environment Variables</a> •
-  <a href="#-routes">Routes</a>
+  <a href="#-getting-started">Getting Started</a>
 </p>
 
 ---
 
-## 📖 Overview
+## 🚀 Live Demo
 
-**FoodHub** is a modern, responsive food ordering platform that connects customers with food providers. It features a beautiful public-facing storefront, a customer dashboard for managing orders and profiles, and a powerful admin panel for managing the entire platform — all in one seamless application.
+**[👉 Try FoodHub Live](https://foodhub-frontend-omega.vercel.app/)**
+
+> **Demo Access:** You can instantly test the platform without registering. Navigate to the Sign-in page and use the built-in **Demo Login buttons** to seamlessly switch between **Customer**, **Provider**, and **Admin** roles.
+
+<p align="center">
+  <img src="./public/foodhub-screenshot.jpg" alt="FoodHub Application Screenshot" />
+</p>
 
 ---
 
-## ✨ Features
+## 📖 Overview & Problem Statement
+
+**The Problem:** Traditional food ordering applications often suffer from fragmented experiences—customers face clunky navigation, food providers lack intuitive menu management tools, and administrators have poor visibility into platform operations.
+
+**The Solution (FoodHub):** FoodHub bridges this gap by offering a modern, unified ecosystem. It connects customers with food providers through an aesthetically pleasing public storefront, provides a robust customer dashboard, and features a powerful role-based admin panel for seamless platform management.
+
+---
+
+## 🏗️ Architecture & Scalability
+
+FoodHub is designed with modern system design principles to ensure scalability, security, and high performance:
+- **Server Components (RSC):** Leverages Next.js 16 App Router to reduce client-side bundle size and improve page load speeds.
+- **Parallel Routing:** Utilizes Next.js parallel routes (`@admin`) to securely and efficiently render complex role-based dashboards (Admin vs Customer).
+- **Data Validation & Security:** Strict runtime validation for environment variables (`@t3-oss/env-nextjs`) and API requests (Zod) prevents configuration-based crashes and injection vulnerabilities.
+- **Secure Authentication:** Implements HTTP-only cookie-based session management using `better-auth`, protecting against common XSS and CSRF attacks.
+
+---
+
+## 🔥 Standout & Unique Features
+
+- **Frictionless Multi-Role Demo System:** Instead of requiring recruiters or users to register, the app features 1-click Demo Login buttons. This allows instant exploration of the application across three distinct permission tiers (Customer, Provider, Admin).
+- **Parallel Routing for Dashboards:** Uses advanced Next.js 16 Parallel Routes (`@admin`) to natively stream distinct dashboard layouts based on role authorization, avoiding clunky client-side redirects or nested layout thrashing.
+- **End-to-End Type Safety:** Enforces strict Zod schema validation starting from server-side environment variables (`@t3-oss/env-nextjs`) to complex UI forms (`react-hook-form`), completely eliminating a whole class of runtime errors.
+
+---
+
+## ✨ Core Features
 
 ### 🌍 Public Storefront
 - **Hero Section** — Eye-catching landing banner with call-to-action
