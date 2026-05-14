@@ -52,7 +52,7 @@ export default function Footer() {
                             <h2 className="sm:text-5xl text-3xl font-medium mb-6 text-foreground">
                                 Begin your path to success contact us today.
                             </h2>
-                            <Button className="py-3.5 px-6 rounded-full bg-teal-400 h-auto">
+                            <Button className="py-3.5 px-6 rounded-full bg-[#ff3300] h-auto">
                                 Get in touch
                             </Button>
                         </div>
