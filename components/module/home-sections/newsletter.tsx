@@ -11,23 +11,25 @@ export function NewsletterSection() {
 
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubscribe = async (e: FormEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleSubscribe = async (e?: any) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
 
     try {
       if (!email) {
-        toast.error("Please enter a valid email address.");
+        toast.error("Please enter a valid email address.", { position: "top-center" });
         return;
       }
       setSubmitting(true);
       // Add delay as requested
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      toast.success("Thanks for subscribing!");
+      toast.success("Thanks for subscribing!", { position: "top-center" });
       setEmail("");
     } catch (error) {
       console.error("Subscription error:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.", { position: "top-center" });
     } finally {
       setSubmitting(false);
     }
@@ -44,7 +46,7 @@ export function NewsletterSection() {
           <p className="text-muted-foreground">
             Get the latest updates, exclusive deals, and culinary inspiration delivered straight to your inbox.
           </p>
-          <form onSubmit={(e) => handleSubscribe(e)} className="w-full max-w-md flex flex-col sm:flex-row gap-3 pt-4">
+          <div className="w-full max-w-md flex flex-col sm:flex-row gap-3 pt-4">
             <Input 
               type="email" 
               placeholder="Enter your email address" 
@@ -52,11 +54,17 @@ export function NewsletterSection() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSubscribe(e);
+                }
+              }}
             />
-            <Button type="submit" disabled={submitting} className="w-full sm:w-auto font-medium">
+            <Button type="button" onClick={(e) => handleSubscribe(e)} disabled={submitting} className="w-full sm:w-auto font-medium">
               {submitting ? "Submitting..." : "Subscribe"}
             </Button>
-          </form>
+          </div>
           <p className="text-xs text-muted-foreground mt-4">
             By subscribing, you agree to our Privacy Policy and Terms of Service.
           </p>

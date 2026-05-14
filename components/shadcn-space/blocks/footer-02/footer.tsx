@@ -10,24 +10,26 @@ export default function Footer() {
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubscribe = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const handleSubscribe = async (event?: any) => {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
 
     try {
       if (!email.trim()) {
-        toast.error("Please enter a valid email address.");
+        toast.error("Please enter a valid email address.", { position: "top-center" });
         return;
       }
 
       setSubmitting(true);
       // Added 1 second delay as requested
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      toast.success("Thanks for subscribing!");
+      toast.success("Thanks for subscribing!", { position: "top-center" });
       setEmail("");
     } catch (error) {
       console.error("Subscription error:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.", { position: "top-center" });
     } finally {
       setSubmitting(false);
     }
@@ -58,10 +60,7 @@ export default function Footer() {
               <div className="md:col-span-1" />
               <div className="col-span-12 md:col-span-8">
                 <div className="flex flex-col lg:flex-row gap-5 lg:gap-10">
-                  <form
-                    onSubmit={(e) => handleSubscribe(e)}
-                    className="flex gap-2 flex-1"
-                  >
+                  <div className="flex gap-2 flex-1">
                     <Input
                       required
                       type="email"
@@ -70,15 +69,22 @@ export default function Footer() {
                       className="rounded-full"
                       value={email}
                       onChange={(event) => setEmail(event.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleSubscribe(e);
+                        }
+                      }}
                     />
                     <Button
-                      type="submit"
+                      type="button"
                       disabled={submitting}
+                      onClick={(e) => handleSubscribe(e)}
                       className="py-2 px-4 rounded-full cursor-pointer font-medium"
                     >
                       {submitting ? "Submitting..." : "Subscribe"}
                     </Button>
-                  </form>
+                  </div>
                   <p className="text-sm flex-1 text-foreground">
                     By subscribing, you agree to receive our promotional emails.
                     You can unsubscribe at any time.
