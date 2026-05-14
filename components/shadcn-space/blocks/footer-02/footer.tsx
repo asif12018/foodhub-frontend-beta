@@ -12,18 +12,25 @@ export default function Footer() {
 
   const handleSubscribe = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    event.stopPropagation();
 
-    if (!email.trim()) {
-      toast.error("Please enter a valid email address.");
-      return;
+    try {
+      if (!email.trim()) {
+        toast.error("Please enter a valid email address.");
+        return;
+      }
+
+      setSubmitting(true);
+      // Added 1 second delay as requested
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success("Thanks for subscribing!");
+      setEmail("");
+    } catch (error) {
+      console.error("Subscription error:", error);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
-
-    setSubmitting(true);
-    // Added 1 second delay as requested
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    toast.success("Thanks for subscribing!");
-    setEmail("");
-    setSubmitting(false);
   };
 
   const footerLinks = [
@@ -52,7 +59,7 @@ export default function Footer() {
               <div className="col-span-12 md:col-span-8">
                 <div className="flex flex-col lg:flex-row gap-5 lg:gap-10">
                   <form
-                    onSubmit={handleSubscribe}
+                    onSubmit={(e) => handleSubscribe(e)}
                     className="flex gap-2 flex-1"
                   >
                     <Input

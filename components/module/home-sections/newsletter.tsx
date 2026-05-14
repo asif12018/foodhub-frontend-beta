@@ -13,16 +13,24 @@ export function NewsletterSection() {
 
   const handleSubscribe = async (e: FormEvent) => {
     e.preventDefault();
-    if (!email) {
-      toast.error("Please enter a valid email address.");
-      return;
+    e.stopPropagation();
+
+    try {
+      if (!email) {
+        toast.error("Please enter a valid email address.");
+        return;
+      }
+      setSubmitting(true);
+      // Add delay as requested
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success("Thanks for subscribing!");
+      setEmail("");
+    } catch (error) {
+      console.error("Subscription error:", error);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(true);
-    // Add delay as requested
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    toast.success("Thanks for subscribing!");
-    setEmail("");
-    setSubmitting(false);
   };
 
   return (
@@ -36,7 +44,7 @@ export function NewsletterSection() {
           <p className="text-muted-foreground">
             Get the latest updates, exclusive deals, and culinary inspiration delivered straight to your inbox.
           </p>
-          <form onSubmit={handleSubscribe} className="w-full max-w-md flex flex-col sm:flex-row gap-3 pt-4">
+          <form onSubmit={(e) => handleSubscribe(e)} className="w-full max-w-md flex flex-col sm:flex-row gap-3 pt-4">
             <Input 
               type="email" 
               placeholder="Enter your email address" 
