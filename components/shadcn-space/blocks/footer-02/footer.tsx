@@ -50,7 +50,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 md:py-24 py-8">
         <div className="flex flex-col gap-16">
           <div className="flex flex-col gap-12">
-            <div className="grid grid-cols-12 gap-6 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-100 ease-in-out fill-mode-both">
+            {/* <div className="grid grid-cols-12 gap-6 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-100 ease-in-out fill-mode-both">
               <div className="col-span-12 md:col-span-3">
                 <p className="w-full text-foreground">
                   Stay updated with the latest FoodHub news, promotions, and
@@ -91,7 +91,7 @@ export default function Footer() {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
             <Separator />
           </div>
           <div className="grid grid-cols-12 gap-6">
