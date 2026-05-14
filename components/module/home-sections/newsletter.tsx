@@ -3,19 +3,26 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail } from "lucide-react";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 
 export function NewsletterSection() {
   const [email, setEmail] = useState("");
 
-  const handleSubscribe = () => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubscribe = async (e: FormEvent) => {
+    e.preventDefault();
     if (!email) {
       toast.error("Please enter a valid email address.");
       return;
     }
+    setSubmitting(true);
+    // Add delay as requested
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     toast.success("Thanks for subscribing!");
     setEmail("");
+    setSubmitting(false);
   };
 
   return (
@@ -29,16 +36,19 @@ export function NewsletterSection() {
           <p className="text-muted-foreground">
             Get the latest updates, exclusive deals, and culinary inspiration delivered straight to your inbox.
           </p>
-          <div className="w-full max-w-md flex flex-col sm:flex-row gap-3 pt-4">
+          <form onSubmit={handleSubscribe} className="w-full max-w-md flex flex-col sm:flex-row gap-3 pt-4">
             <Input 
               type="email" 
               placeholder="Enter your email address" 
               className="w-full bg-background border-primary/20 focus-visible:ring-primary/50"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
-            <Button onClick={handleSubscribe} className="w-full sm:w-auto font-medium">Subscribe</Button>
-          </div>
+            <Button type="submit" disabled={submitting} className="w-full sm:w-auto font-medium">
+              {submitting ? "Submitting..." : "Subscribe"}
+            </Button>
+          </form>
           <p className="text-xs text-muted-foreground mt-4">
             By subscribing, you agree to our Privacy Policy and Terms of Service.
           </p>
