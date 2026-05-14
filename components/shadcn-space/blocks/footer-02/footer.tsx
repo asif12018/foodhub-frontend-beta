@@ -1,8 +1,30 @@
+"use client"
+
+import { useState, type FormEvent } from "react"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 
 export default function Footer() {
+    const [email, setEmail] = useState("")
+    const [submitting, setSubmitting] = useState(false)
+
+    const handleSubscribe = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+
+        if (!email.trim()) {
+            toast.error("Please enter a valid email address.")
+            return
+        }
+
+        setSubmitting(true)
+        await new Promise((resolve) => setTimeout(resolve, 700))
+        toast.success("Thanks for subscribing!")
+        setEmail("")
+        setSubmitting(false)
+    }
+
     const footerLinks = [
         { label: "Home", href: "/" },
         { label: "Menu", href: "/allFood" },
@@ -27,16 +49,18 @@ export default function Footer() {
                             <div className="md:col-span-1" />
                             <div className="col-span-12 md:col-span-8">
                                 <div className='flex flex-col lg:flex-row gap-5 lg:gap-10'>
-                                    <form className='flex gap-2 flex-1'>
+                                    <form onSubmit={handleSubscribe} className='flex gap-2 flex-1'>
                                         <Input
                                             required
                                             type="email"
                                             name="email"
                                             placeholder="enter your email"
-                                            className="rounded-full "
+                                            className="rounded-full"
+                                            value={email}
+                                            onChange={(event) => setEmail(event.target.value)}
                                         />
-                                        <Button type='submit' className='py-2 px-4 rounded-full cursor-pointer font-medium'>
-                                            Subscribe
+                                        <Button type='submit' disabled={submitting} className='py-2 px-4 rounded-full cursor-pointer font-medium'>
+                                            {submitting ? "Submitting..." : "Subscribe"}
                                         </Button>
                                     </form>
                                     <p className='text-sm flex-1 text-foreground'>
